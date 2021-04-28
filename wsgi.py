@@ -1,5 +1,5 @@
 from flask import Flask  #  module to create an api 
-from bubblesort import app
+from main import app
 
 
 if __name__ == '__main__':
