@@ -4,6 +4,7 @@ import json # module to parse json data
 from flask_restful import Api, Resource
 import psycopg2
 import os
+import pybreaker
 
 # Init Flask
 app = Flask(__name__)
@@ -17,11 +18,19 @@ db_pass = os.getenv("DB_PASS", "postgres")
 db_port = os.getenv("DB_PORT", "5432") 
 
 
-conn = psycopg2.connect(host=db_host, database=db_name, user=db_user, password=db_pass, port=db_port)
+conn_circuit_breaker = pybreaker.CircuitBreaker(
+    fail_max=1,
+    reset_timeout=10,
+)
 
+@conn_circuit_breaker
+def create_conn():
+    conn = psycopg2.connect(host=db_host, database=db_name, user=db_user, password=db_pass, port=db_port)
+    return conn
 
 class Componentdeps(Resource):
     def post(self):
+        conn = create_conn() 
         components_data = []
         component_json = request.get_json()
         components = component_json.get('components')
