@@ -6,11 +6,30 @@ import pybreaker
 import requests
 from flask import Flask, request  # module to create an api
 from flask_restful import Api, Resource
+from werkzeug.utils import send_from_directory
+from flask_swagger_ui import get_swaggerui_blueprint
 
 # Init Flask
 app = Flask(__name__)
 api = Api(app)
 app.url_map.strict_slashes = False
+
+@app.route('/static/<path:path>')
+def send_static(path):
+    return send_from_directory('static',path)
+
+### swagger specific ###
+SWAGGER_URL = '/swagger'
+API_URL = '/static/swagger.yml'
+SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': "ortelius-ms-dep-pkg-cud"
+    }
+)
+app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
+### end swagger specific ###
 
 # Init db connection
 db_host = os.getenv("DB_HOST", "localhost")
@@ -120,7 +139,7 @@ class Componentdeps(Resource):
 
             return ({"message": 'oops!, Something went wrong!'})
             
-
+    
     def delete(self):
         
         result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies)
