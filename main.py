@@ -1,13 +1,16 @@
+import json
 import os
 
 import psycopg2
 import pybreaker
+import requests
 from flask import Flask, request  # module to create an api
 from flask_restful import Api, Resource
 
 # Init Flask
 app = Flask(__name__)
 api = Api(app)
+app.url_map.strict_slashes = False
 
 # Init db connection
 db_host = os.getenv("DB_HOST", "localhost")
@@ -15,6 +18,9 @@ db_name = os.getenv("DB_NAME", "postgres")
 db_user = os.getenv("DB_USER", "postgres")
 db_pass = os.getenv("DB_PASS", "postgres")
 db_port = os.getenv("DB_PORT", "5432") 
+
+url = requests.get('https://raw.githubusercontent.com/pyupio/safety-db/master/data/insecure_full.json')
+safety_db = json.loads(url.text)
 
 conn_circuit_breaker = pybreaker.CircuitBreaker(
     fail_max=1,
@@ -31,25 +37,47 @@ class Componentdeps(Resource):
         conn = create_conn() 
         conn.set_session(autocommit=False)
         compid = request.args.get('compid', None)
+        deptype = request.args.get('bomformat', None)
         components_data = []
         component_json = request.get_json()
 
-        deptype = component_json.get('bomFormat', None)
-
         # Parse CycloneDX BOM for licenses
-        if (deptype is not None and deptype == 'CycloneDX'):
+        if (deptype is not None and deptype.lower() == 'CycloneDX'.lower()):
             components = component_json.get('components')
             deptype = 'license'
             for component in (components):
                 packagename = component.get('name')
                 packageversion = component.get('version','')
+                summary = ''
                 license_url = ''
                 license_name =  ''
                 licenses = component.get('licenses')
                 if (licenses):
                     license_name = licenses[0].get('license').get('name', '')
                     license_url = 'https://spdx.org/licenses/' + license_name + '.html'
-                component_data = (compid, packagename, packageversion, deptype, license_name, license_url )
+                component_data = (compid, packagename, packageversion, deptype, license_name, license_url, summary )
+                components_data.append(component_data)
+
+        # Parse Python Safety for CVEs
+        if (deptype is not None and deptype.lower() == 'safety'.lower()):
+            deptype = 'cve'
+            for component in (component_json):
+                packagename = component[0] # name 
+                packageversion = component[2] # version
+                summary = component[3]
+                safety_id = component[4] # cve id
+                cve_url = ''
+                cve_name = safety_id
+                cve_detail = safety_db.get(packagename, None)
+                if (cve_detail is not None):
+                    for cve in cve_detail:
+                        if (cve['id'] == 'pyup.io-' + safety_id):
+                            cve_name = cve['cve']
+                            if (cve_name.startswith('CVE')):
+                                cve_url = 'https://nvd.nist.gov/vuln/detail/' + cve_name
+                            break
+
+                component_data = (compid, packagename, packageversion, deptype, cve_name, cve_url, summary )
                 components_data.append(component_data)
 
         try:
@@ -63,7 +91,7 @@ class Componentdeps(Resource):
             cursor.execute(sql, params)
 
             #insert into database
-            sql = 'INSERT INTO dm_componentdeps(compid, packagename, packageversion, deptype, name, url) VALUES {}'.format(records_list_template)
+            sql = 'INSERT INTO dm_componentdeps(compid, packagename, packageversion, deptype, name, url, summary) VALUES {}'.format(records_list_template)
 
             cursor.execute(sql, components_data)
 
