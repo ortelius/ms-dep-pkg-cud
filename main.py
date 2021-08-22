@@ -18,6 +18,7 @@ db_name = os.getenv("DB_NAME", "postgres")
 db_user = os.getenv("DB_USER", "postgres")
 db_pass = os.getenv("DB_PASS", "postgres")
 db_port = os.getenv("DB_PORT", "5432") 
+validateuser_url = os.getenv("VALIDATEUSER_URL", "http://localhost:5000")
 
 url = requests.get('https://raw.githubusercontent.com/pyupio/safety-db/master/data/insecure_full.json')
 safety_db = json.loads(url.text)
@@ -34,6 +35,14 @@ def create_conn():
 
 class Componentdeps(Resource):
     def post(self):
+        
+        result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies)
+        if (result is None):
+            return None, 404
+
+        if (result.status_code != 200):
+            return result.json(), 404
+        
         conn = create_conn() 
         conn.set_session(autocommit=False)
         compid = request.args.get('compid', None)
@@ -113,6 +122,14 @@ class Componentdeps(Resource):
             
 
     def delete(self):
+        
+        result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies)
+        if (result is None):
+            return None, 404
+
+        if (result.status_code != 200):
+            return result.json(), 404
+        
         compid = request.args.get('compid', -1)
         deptype = request.args.get('deptype', None)
 
