@@ -1,13 +1,16 @@
 import json
 import os
-
 import psycopg2
 import pybreaker
 import requests
-from flask import Flask, request  # module to create an api
+import sqlalchemy.pool as pool
+from flask import Flask, request
 from flask_restful import Api, Resource
 from werkzeug.utils import send_from_directory
 from flask_swagger_ui import get_swaggerui_blueprint
+from http import HTTPStatus
+from webargs import fields, validate
+from webargs.flaskparser import parser, abort
 
 # Init Flask
 app = Flask(__name__)
@@ -18,7 +21,7 @@ app.url_map.strict_slashes = False
 def send_static(path):
     return send_from_directory('static',path)
 
-### swagger specific ###
+# swagger config
 SWAGGER_URL = '/swagger'
 API_URL = '/static/swagger.yml'
 SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
@@ -29,7 +32,6 @@ SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
     }
 )
 app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
-### end swagger specific ###
 
 # Init db connection
 db_host = os.getenv("DB_HOST", "localhost")
@@ -42,6 +44,11 @@ validateuser_url = os.getenv("VALIDATEUSER_URL", "http://localhost:5000")
 url = requests.get('https://raw.githubusercontent.com/pyupio/safety-db/master/data/insecure_full.json')
 safety_db = json.loads(url.text)
 
+# connection pool config
+conn_pool_size = os.getenv("POOL_SIZE", 3)
+conn_pool_max_overflow = os.getenv("POOL_MAX_OVERFLOW", 2)
+conn_pool_timeout = os.getenv("POOL_TIMEOUT", 30.0) 
+
 conn_circuit_breaker = pybreaker.CircuitBreaker(
     fail_max=1,
     reset_timeout=10,
@@ -52,9 +59,29 @@ def create_conn():
     conn = psycopg2.connect(host=db_host, database=db_name, user=db_user, password=db_pass, port=db_port)
     return conn
 
+# connection pool init
+mypool = pool.QueuePool(create_conn, max_overflow=conn_pool_max_overflow, pool_size=conn_pool_size, timeout=conn_pool_timeout)
+
+# health check endpoint
+class HealthCheck(Resource):
+    def get(self):
+        try:
+            conn = mypool.connect() 
+            cursor = conn.cursor()
+            cursor.execute('SELECT 1')
+            conn.close()
+            if cursor.rowcount > 0:
+                return ({"status": 'UP',"service_name": 'ortelius-ms-dep-pkg-cud'}),HTTPStatus.OK
+            return ({"status": 'DOWN'}),HTTPStatus.SERVICE_UNAVAILABLE
+
+        except Exception as e:
+            print(e)
+            return ({"status": 'DOWN'}),HTTPStatus.SERVICE_UNAVAILABLE
+
+api.add_resource(HealthCheck, '/health')
+
 class Componentdeps(Resource):
     def post(self):
-        
         result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies)
         if (result is None):
             return None, 404
@@ -62,8 +89,12 @@ class Componentdeps(Resource):
         if (result.status_code != 200):
             return result.json(), 404
         
-        conn = create_conn() 
-        conn.set_session(autocommit=False)
+        query_args_validations = {
+            "compid": fields.Int(required=True, validate=validate.Range(min=1)),
+        }
+
+        parser.parse(query_args_validations, request, location="query")
+
         compid = request.args.get('compid', None)
         deptype = request.args.get('bomformat', None)
         components_data = []
@@ -109,11 +140,16 @@ class Componentdeps(Resource):
                 components_data.append(component_data)
 
         try:
-            print(components_data)
+            print("Components Data :",components_data)
+            if len(components_data)==0:
+                return ({"message": 'components not updated'}),HTTPStatus.OK
+
+            conn = mypool.connect() 
+            conn.set_session(autocommit=False)
             cursor = conn.cursor()
             records_list_template = ','.join(['%s'] * len(components_data))
 
-            #delete old licenses
+            # delete old licenses
             sql = 'DELETE from dm_componentdeps where compid=%s and deptype=%s'
             params=(compid, deptype,)
             cursor.execute(sql, params)
@@ -126,37 +162,45 @@ class Componentdeps(Resource):
             rows_inserted = cursor.rowcount
             # Commit the changes to the database
             conn.commit()
+            conn.close()
             if rows_inserted > 0:
-                return ({"message": 'components updated Succesfully'})
+                return ({"message": 'components updated succesfully'}),HTTPStatus.CREATED
 
-            return ({"message": 'oops!, Something went wrong!'})
+            return ({"message": 'components not updated'}),HTTPStatus.OK
 
         except Exception as e:
             print(e)
             cursor = conn.cursor()
             cursor.execute("ROLLBACK")
-            conn.commit() 
+            conn.commit()
+            conn.close() 
 
-            return ({"message": 'oops!, Something went wrong!'})
+            return ({"message": 'oops!, Something went wrong!'}),HTTPStatus.INTERNAL_SERVER_ERROR
             
     
     def delete(self):
-        
         result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies)
         if (result is None):
             return None, 404
 
         if (result.status_code != 200):
             return result.json(), 404
-        
+
+        query_args_validations = {
+            "compid": fields.Int(required=True, validate=validate.Range(min=1)),
+            "deptype": fields.Str(required=True, validate=validate.Length(min=1)),
+        }
+
+        parser.parse(query_args_validations, request, location="query")
+
         compid = request.args.get('compid', -1)
         deptype = request.args.get('deptype', None)
 
         try:
-            conn = create_conn() 
+            conn = mypool.connect() 
             cursor = conn.cursor()
 
-            #delete into database
+            # delete from database
             sql = 'DELETE from dm_componentdeps where compid=%s and deptype=%s'
 
             params=(compid, deptype,)
@@ -165,20 +209,27 @@ class Componentdeps(Resource):
             rows_inserted = cursor.rowcount
             # Commit the changes to the database
             conn.commit()
+            conn.close()
             if rows_inserted > 0:
-                return ({"message": f'compid {compid} deleted'})
+                return ({"message": f'compid {compid} deleted'}),HTTPStatus.OK
             
-            return ({"message": f'Something went wrong!, Couldn\'t delete comp id {compid}'})
+            return ({"message": f'Something went wrong!, Couldn\'t delete comp id {compid}'}),HTTPStatus.OK
 
         except Exception as e:
             print(e)
             cursor = conn.cursor()
             cursor.execute("ROLLBACK")
-            conn.commit() 
+            conn.commit()
+            conn.close() 
 
-            return ({"message": f'Something went wrong!, Couldn\'t delete comp id {compid}'})
+            return ({"message": 'oops!, Something went wrong!'}),HTTPStatus.INTERNAL_SERVER_ERROR
 
 api.add_resource(Componentdeps, '/msapi/deppkg')
+
+# error handler for request validation errors
+@parser.error_handler
+def handle_request_parsing_error(err, req, schema, *, error_status_code, error_headers):
+    abort(HTTPStatus.BAD_REQUEST,errors=err.messages)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5003)
