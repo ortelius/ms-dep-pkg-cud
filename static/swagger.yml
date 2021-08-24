@@ -1,0 +1,125 @@
+openapi: 3.0.1
+info:
+  title: ortelius-ms-dep-pkg-cud
+  description: '<a href="https://github.com/ortelius/ortelius-ms-dep-pkg-cud">Check on GitHub</a>'
+  contact:
+    email: steve@deployhub.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Ortelius
+  url: https://ortelius.io/
+servers:
+- url: /
+tags:
+- name: dep-pkg
+paths:
+  '/msapi/deppkg':
+    post:
+      tags:
+        - dep-pkg
+      summary: Adds a component's licenses
+      operationId: addComponentLicenses
+      parameters:
+      - name: compid
+        in: query
+        required: true
+        description: Component Id for which licenses are to be added
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+                $ref: '#/components/schemas/Add-Component-Request'
+      responses:
+        "201":
+          description: licenses added for comp id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Api-Response'
+              example: 
+                message: "components updated Succesfully"
+        '500':
+          description: Something went wrong!, Couldn't delete comp id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Api-Response'
+              example: 
+                message: "oops!, Something went wrong!"
+    delete:
+      tags:
+        - dep-pkg
+      summary: Deletes a component's licenses
+      operationId: deleteComponentLicenses
+      parameters:
+      - name: compid
+        in: query
+        required: true
+        description: Component Id for which licenses are to be deleted
+        schema:
+          type: integer
+          format: int64
+      - name: deptype
+        in: query
+        required: true
+        description: Dependency type for which licenses are to be deleted
+        schema:
+          type: string
+      responses:
+        '200':
+          description: comp id deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Api-Response'
+              example: 
+                message: "comp id deleted"
+        '500':
+          description: Something went wrong!, Couldn't delete comp id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Api-Response'
+              example: 
+                message: "Something went wrong!, Couldn't delete comp id"
+components:
+  schemas:
+    Add-Component-Request:
+      type: object
+      properties:
+        bomFormat:
+          type: string
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/Component'
+    Component:
+      type: object
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+        licenses:
+          type: array
+          items: 
+            $ref: '#/components/schemas/License'
+    License:
+      type: object
+      properties:
+        license:
+          type: object
+          properties:
+            name:
+              type: string
+    Api-Response:
+      type: object
+      properties:
+        message:
+          type: string
