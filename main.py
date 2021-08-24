@@ -155,7 +155,6 @@ class Componentdeps(Resource):
                 components_data.append(component_data)
 
         try:
-            print("Components Data :", components_data)
             if len(components_data) == 0:
                 return ({"message": 'components not updated'}), HTTPStatus.OK
 
