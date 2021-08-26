@@ -98,10 +98,10 @@ class Componentdeps(Resource):
     def post(self):
         result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies)
         if (result is None):
-            return None, 404
+            return None, HTTPStatus.UNAUTHORIZED
 
-        if (result.status_code != 200):
-            return result.json(), 404
+        if (result.status_code != HTTPStatus.OK):
+            return result.json(), HTTPStatus.UNAUTHORIZED
 
         query_args_validations = {
             "compid": fields.Int(required=True, validate=validate.Range(min=1)),
@@ -191,10 +191,10 @@ class Componentdeps(Resource):
     def delete(self):
         result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies)
         if (result is None):
-            return None, 404
+            return None, HTTPStatus.UNAUTHORIZED
 
-        if (result.status_code != 200):
-            return result.json(), 404
+        if (result.status_code != HTTPStatus.OK):
+            return result.json(), HTTPStatus.UNAUTHORIZED
 
         query_args_validations = {
             "compid": fields.Int(required=True, validate=validate.Range(min=1)),
