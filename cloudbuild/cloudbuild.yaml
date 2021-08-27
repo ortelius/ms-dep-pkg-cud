@@ -4,10 +4,10 @@ steps:
     entrypoint: 'bash'
     args: ['-c', 'ls -A1 | xargs rm -rf;git clone $$COMPONENT_GITURL .;git checkout --track -b $BRANCH_NAME origin/$BRANCH_NAME;env | sed "s/^/export /" >> /workspace/cloudbuild.sh']
     env: 
-      - 'COMPONENT_GITURL=https://github.com/ortelius/ortelius-ms-dep-pkg-cud
+      - 'COMPONENT_GITURL=https://github.com/ortelius/ortelius-ms-dep-pkg-cud'
       - 'COMPONENT_VERSION=9.0.0'
       - 'COMPONENT_VARIANT=$BRANCH_NAME'
-      - 'COMPONENT_DOCKERREPO=quay.io/ortelius/ms-dep-pkg-cud
+      - 'COMPONENT_DOCKERREPO=quay.io/ortelius/ms-dep-pkg-cud'
       - 'BLDDATE=`date`'
       - 'IMAGE_TAG="$BRANCH_NAME-v$$COMPONENT_VERSION.$$(git rev-list --count $BRANCH_NAME)-g$SHORT_SHA"'
 
