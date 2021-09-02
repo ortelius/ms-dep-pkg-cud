@@ -2,8 +2,6 @@ import json
 import os
 from typing import Optional
 
-import psycopg2  # type: ignore
-import pybreaker  # type: ignore
 import requests
 from fastapi import Body, FastAPI, HTTPException, Request, Response, status
 from pydantic import BaseModel
