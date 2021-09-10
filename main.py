@@ -1,45 +1,17 @@
 import json
 import os
-from http import HTTPStatus
+from typing import Optional
 
-import psycopg2
-import pybreaker
 import requests
-import sqlalchemy.pool as pool
-from flask import Flask, request, send_from_directory
-from flask_restful import Api, Resource
-from flask_swagger_ui import get_swaggerui_blueprint
-from webargs import fields, validate
-from webargs.flaskparser import abort, parser
+from fastapi import Body, FastAPI, HTTPException, Request, Response, status
+from pydantic import BaseModel
+from sqlalchemy import create_engine
 
+# Init Globals
+service_name = 'ortelius-ms-dep-pkg-cud'
 
-#pylint: disable=unused-argument
-@parser.error_handler
-def handle_request_parsing_error(err, req, schema, *, error_status_code, error_headers):
-    abort(HTTPStatus.BAD_REQUEST, errors=err.messages)
-
-# Init Flask
-app = Flask(__name__)
-api = Api(app)
-app.url_map.strict_slashes = False
-
-
-@app.route('/static/<path:path>')
-def send_static(path):
-    return send_from_directory('static', path)
-
-
-# swagger config
-SWAGGER_URL = '/swagger'
-API_URL = '/static/swagger.yml'
-SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
-    SWAGGER_URL,
-    API_URL,
-    config={
-        'app_name': "ortelius-ms-dep-pkg-cud"
-    }
-)
-app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
+# Init FastAPI
+app = FastAPI()
 
 # Init db connection
 db_host = os.getenv("DB_HOST", "localhost")
@@ -52,120 +24,199 @@ validateuser_url = os.getenv("VALIDATEUSER_URL", "http://localhost:5000")
 url = requests.get('https://raw.githubusercontent.com/pyupio/safety-db/master/data/insecure_full.json')
 safety_db = json.loads(url.text)
 
-# connection pool config
-conn_pool_size = int(os.getenv("POOL_SIZE", "3"))
-conn_pool_max_overflow = int(os.getenv("POOL_MAX_OVERFLOW", "2"))
-conn_pool_timeout = float(os.getenv("POOL_TIMEOUT", "30.0"))
-
-conn_circuit_breaker = pybreaker.CircuitBreaker(
-    fail_max=1,
-    reset_timeout=10,
-)
-
-
-@conn_circuit_breaker
-def create_conn():
-    conn = psycopg2.connect(host=db_host, database=db_name, user=db_user, password=db_pass, port=db_port)
-    return conn
-
-
-# connection pool init
-mypool = pool.QueuePool(create_conn, max_overflow=conn_pool_max_overflow, pool_size=conn_pool_size, timeout=conn_pool_timeout)
+engine = create_engine("postgresql+psycopg2://" + db_user + ":" + db_pass + "@" + db_host + "/" + db_name)
 
 # health check endpoint
 
+class StatusMsg(BaseModel):
+    status: str
+    service_name: Optional[str] = None
 
-class HealthCheck(Resource):
-    def get(self):
-        try:
-            conn = mypool.connect()
+
+@app.get("/health",
+         responses={
+             503: {"model": StatusMsg,
+                   "description": "DOWN Status for the Service",
+                   "content": {
+                       "application/json": {
+                           "example": {"status": 'DOWN'}
+                       },
+                   },
+                   },
+             200: {"model": StatusMsg,
+                   "description": "UP Status for the Service",
+                   "content": {
+                       "application/json": {
+                           "example": {"status": 'UP', "service_name": service_name}
+                       }
+                   },
+                   },
+         }
+         )
+async def health(response: Response):
+    try:
+        with engine.connect() as connection:
+            conn = connection.connection
             cursor = conn.cursor()
             cursor.execute('SELECT 1')
-            conn.close()
             if cursor.rowcount > 0:
-                return ({"status": 'UP', "service_name": 'ortelius-ms-dep-pkg-cud'}), HTTPStatus.OK
-            return ({"status": 'DOWN'}), HTTPStatus.SERVICE_UNAVAILABLE
+                return {"status": 'UP', "service_name": service_name}
+            response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
+            return {"status": 'DOWN'}
 
-        except Exception as err:
-            print(err)
-            return ({"status": 'DOWN'}), HTTPStatus.SERVICE_UNAVAILABLE
+    except Exception as err:
+        print(str(err))
+        response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
+        return {"status": 'DOWN'}
+
+# validate user endpoint
+
+def example(filename):
+    text = ''
+    with open(filename, 'r') as f:
+        text = f.read()
+    return text
+
+class Message(BaseModel):
+    detail: str
 
 
-api.add_resource(HealthCheck, '/health')
-
-
-class Componentdeps(Resource):
-    def post(self):
+@app.post('/msapi/deppkg/cyclonedx',
+          response_model=Message,
+          responses={
+              401: {"model": Message,
+                    "description": "Authorization Status",
+                    "content": {
+                        "application/json": {
+                            "example": {"detail": "Authorization failed"}
+                        },
+                    },
+                    },
+              500: {"model": Message,
+                    "description": "SQL Error",
+                    "content": {
+                        "application/json": {
+                            "example": {"detail": "SQL Error: 30x"}
+                        },
+                    },
+                    },
+              200: {
+                  "model": Message,
+                  "description": "Success Message",
+                  "content": {
+                      "application/json": {
+                          "example": {"detail": "Component updated successfully"}
+                      }
+                  },
+              },
+          }
+          )
+async def cyclonedx(request: Request, response: Response, compid: int, cyclonedx_json: dict = Body(...,example=example('cyclonedx.json'),description='JSON output from running CycloneDX')):
+    try:
         result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies)
         if (result is None):
-            return None, HTTPStatus.UNAUTHORIZED
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed")
 
-        if (result.status_code != HTTPStatus.OK):
-            return result.json(), HTTPStatus.UNAUTHORIZED
+        if (result.status_code != status.HTTP_200_OK):
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed status_code=" + str(result.status_code))
+    except Exception as err:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed:" + str(err)) from None
 
-        query_args_validations = {
-            "compid": fields.Int(required=True, validate=validate.Range(min=1)),
-            "bomformat": fields.Str(required=True)
-        }
+    components_data = []
+    components = cyclonedx_json.get('components', [])
 
-        parser.parse(query_args_validations, request, location="query")
+    # Parse CycloneDX BOM for licenses
+    bomformat = 'license'
+    for component in (components):
+        packagename = component.get('name')
+        packageversion = component.get('version', '')
+        summary = ''
+        license_url = ''
+        license_name = ''
+        licenses = component.get('licenses')
+        if (licenses):
+            license_name = licenses[0].get('license').get('name', '')
+            license_url = 'https://spdx.org/licenses/' + license_name + '.html'
+        component_data = (compid, packagename, packageversion, bomformat, license_name, license_url, summary)
+        components_data.append(component_data)
 
-        compid = request.args.get('compid', None)
-        deptype = request.args.get('bomformat', None)
-        components_data = []
-        component_json = request.get_json()
+    return saveComponentsData(response, compid, bomformat, components_data)
 
-        # Parse CycloneDX BOM for licenses
-        if (deptype is not None and deptype.lower() == 'CycloneDX'.lower()):
-            components = component_json.get('components')
-            deptype = 'license'
-            for component in (components):
-                packagename = component.get('name')
-                packageversion = component.get('version', '')
-                summary = ''
-                license_url = ''
-                license_name = ''
-                licenses = component.get('licenses')
-                if (licenses):
-                    license_name = licenses[0].get('license').get('name', '')
-                    license_url = 'https://spdx.org/licenses/' + license_name + '.html'
-                component_data = (compid, packagename, packageversion, deptype, license_name, license_url, summary)
-                components_data.append(component_data)
 
-        # Parse Python Safety for CVEs
-        if (deptype is not None and deptype.lower() == 'safety'.lower()):
-            deptype = 'cve'
-            for component in (component_json):
-                packagename = component[0]  # name
-                packageversion = component[2]  # version
-                summary = component[3]
-                safety_id = component[4]  # cve id
-                cve_url = ''
-                cve_name = safety_id
-                cve_detail = safety_db.get(packagename, None)
-                if (cve_detail is not None):
-                    for cve in cve_detail:
-                        if (cve['id'] == 'pyup.io-' + safety_id):
-                            cve_name = cve['cve']
-                            if (cve_name.startswith('CVE')):
-                                cve_url = 'https://nvd.nist.gov/vuln/detail/' + cve_name
-                            break
+@app.post('/msapi/deppkg/safety',
+          response_model=Message,
+          responses={
+              401: {"model": Message,
+                    "description": "Authorization Status",
+                    "content": {
+                        "application/json": {
+                            "example": {"detail": "Authorization failed"}
+                        },
+                    },
+                    },
+              500: {"model": Message,
+                    "description": "SQL Error",
+                    "content": {
+                        "application/json": {
+                            "example": {"detail": "SQL Error: 30x"}
+                        },
+                    },
+                    },
+              200: {
+                  "model": Message,
+                  "description": "Success Message",
+                  "content": {
+                      "application/json": {
+                          "example": {"detail": "Component updated successfully"}
+                      }
+                  },
+              },
+          }
+          )
+async def safety(request: Request, response: Response, compid: int, safety_json: list = Body(...,example=example('safety.json'),description='JSON output from running safety')):
+    result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies)
+    if (result is None):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed")
 
-                component_data = (compid, packagename, packageversion, deptype, cve_name, cve_url, summary)
-                components_data.append(component_data)
+    if (result.status_code != status.HTTP_200_OK):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed status_code=" + str(result.status_code))
 
-        try:
-            if len(components_data) == 0:
-                return ({"message": 'components not updated'}), HTTPStatus.OK
+    components_data = []
+    bomformat = 'cve'
+    for component in (safety_json):
+        packagename = component[0]  # name
+        packageversion = component[2]  # version
+        summary = component[3]
+        safety_id = component[4]  # cve id
+        cve_url = ''
+        cve_name = safety_id
+        cve_detail = safety_db.get(packagename, None)
+        if (cve_detail is not None):
+            for cve in cve_detail:
+                if (cve['id'] == 'pyup.io-' + safety_id):
+                    cve_name = cve['cve']
+                    if (cve_name.startswith('CVE')):
+                        cve_url = 'https://nvd.nist.gov/vuln/detail/' + cve_name
+                    break
 
-            conn = mypool.connect()
+        component_data = (compid, packagename, packageversion, bomformat, cve_name, cve_url, summary)
+        components_data.append(component_data)
+    return saveComponentsData(response, compid, bomformat, components_data)
+
+def saveComponentsData(response, compid, bomformat, components_data):
+    try:
+        if len(components_data) == 0:
+            return {"detail": "components not updated"}
+
+        with engine.connect() as connection:
+            conn = connection.connection
             conn.set_session(autocommit=False)
             cursor = conn.cursor()
             records_list_template = ','.join(['%s'] * len(components_data))
 
             # delete old licenses
             sql = 'DELETE from dm_componentdeps where compid=%s and deptype=%s'
-            params = (compid, deptype,)
+            params = (compid, bomformat,)
             cursor.execute(sql, params)
 
             # insert into database
@@ -176,63 +227,14 @@ class Componentdeps(Resource):
             rows_inserted = cursor.rowcount
             # Commit the changes to the database
             conn.commit()
-            conn.close()
             if rows_inserted > 0:
-                return ({"message": 'components updated succesfully'}), HTTPStatus.CREATED
+                response.status_code = status.HTTP_201_CREATED
+                return {"detail": "components updated succesfully"}
 
-            return ({"message": 'components not updated'}), HTTPStatus.OK
+        return {"detail": "components not updated"}
 
-        except Exception as err:
-            print(err)
-            conn.rollback()
-            return ({"message": str(err)}), HTTPStatus.INTERNAL_SERVER_ERROR
-
-
-    def delete(self):
-        result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies)
-        if (result is None):
-            return None, HTTPStatus.UNAUTHORIZED
-
-        if (result.status_code != HTTPStatus.OK):
-            return result.json(), HTTPStatus.UNAUTHORIZED
-
-        query_args_validations = {
-            "compid": fields.Int(required=True, validate=validate.Range(min=1)),
-            "deptype": fields.Str(required=True, validate=validate.Length(min=1)),
-        }
-
-        parser.parse(query_args_validations, request, location="query")
-
-        compid = request.args.get('compid', -1)
-        deptype = request.args.get('deptype', None)
-
-        try:
-            conn = mypool.connect()
-            cursor = conn.cursor()
-
-            # delete from database
-            sql = 'DELETE from dm_componentdeps where compid=%s and deptype=%s'
-
-            params = (compid, deptype,)
-            cursor.execute(sql, params)
-
-            rows_inserted = cursor.rowcount
-            # Commit the changes to the database
-            conn.commit()
-            conn.close()
-            if rows_inserted > 0:
-                return ({"message": f'compid {compid} deleted'}), HTTPStatus.OK
-
-            return ({"message": f'Something went wrong!, Couldn\'t delete comp id {compid}'}), HTTPStatus.OK
-
-        except Exception as err:
-            print(err)
-            conn.rollback()
-            return ({"message": str(err)}), HTTPStatus.INTERNAL_SERVER_ERROR
-
-
-api.add_resource(Componentdeps, '/msapi/deppkg')
-
-
-if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5003)
+    except HTTPException:
+        raise
+    except Exception as err:
+        print(str(err))
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(err)) from None
