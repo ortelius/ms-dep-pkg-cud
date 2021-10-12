@@ -6,9 +6,13 @@ import requests
 from fastapi import Body, FastAPI, HTTPException, Request, Response, status
 from pydantic import BaseModel
 from sqlalchemy import create_engine
+from sqlalchemy.exc import OperationalError, StatementError
+from time import sleep
+import logging
 
 # Init Globals
 service_name = 'ortelius-ms-dep-pkg-cud'
+db_conn_retry = 3
 
 # Init FastAPI
 app = FastAPI()
@@ -24,7 +28,7 @@ validateuser_url = os.getenv("VALIDATEUSER_URL", "http://localhost:5000")
 url = requests.get('https://raw.githubusercontent.com/pyupio/safety-db/master/data/insecure_full.json')
 safety_db = json.loads(url.text)
 
-engine = create_engine("postgresql+psycopg2://" + db_user + ":" + db_pass + "@" + db_host + "/" + db_name)
+engine = create_engine("postgresql+psycopg2://" + db_user + ":" + db_pass + "@" + db_host + "/" + db_name, pool_pre_ping=True)
 
 # health check endpoint
 
@@ -207,31 +211,52 @@ def saveComponentsData(response, compid, bomformat, components_data):
     try:
         if len(components_data) == 0:
             return {"detail": "components not updated"}
+        
+                #Retry logic for failed query
+        no_of_retry = db_conn_retry
+        attempt = 1;
+        while True:
+            try:
+                with engine.connect() as connection:
+                    conn = connection.connection
+                    conn.set_session(autocommit=False)
+                    cursor = conn.cursor()
+                    records_list_template = ','.join(['%s'] * len(components_data))
 
-        with engine.connect() as connection:
-            conn = connection.connection
-            conn.set_session(autocommit=False)
-            cursor = conn.cursor()
-            records_list_template = ','.join(['%s'] * len(components_data))
+                    # delete old licenses
+                    sql = 'DELETE from dm_componentdeps where compid=%s and deptype=%s'
+                    params = (compid, bomformat,)
+                    cursor.execute(sql, params)
 
-            # delete old licenses
-            sql = 'DELETE from dm_componentdeps where compid=%s and deptype=%s'
-            params = (compid, bomformat,)
-            cursor.execute(sql, params)
+                    # insert into database
+                    sql = 'INSERT INTO dm_componentdeps(compid, packagename, packageversion, deptype, name, url, summary) VALUES {}'.format(records_list_template)
 
-            # insert into database
-            sql = 'INSERT INTO dm_componentdeps(compid, packagename, packageversion, deptype, name, url, summary) VALUES {}'.format(records_list_template)
+                    cursor.execute(sql, components_data)
 
-            cursor.execute(sql, components_data)
+                    rows_inserted = cursor.rowcount
+                    # Commit the changes to the database
+                    conn.commit()
+                    if rows_inserted > 0:
+                        response.status_code = status.HTTP_201_CREATED
+                        return {"detail": "components updated succesfully"}
 
-            rows_inserted = cursor.rowcount
-            # Commit the changes to the database
-            conn.commit()
-            if rows_inserted > 0:
-                response.status_code = status.HTTP_201_CREATED
-                return {"detail": "components updated succesfully"}
+                return {"detail": "components not updated"}
 
-        return {"detail": "components not updated"}
+            except (InterfaceError, OperationalError) as ex:
+                if attempt < no_of_retry:
+                    sleep_for = 0.2
+                    logging.error(
+                        "Database connection error: {} - sleeping for {}s"
+                        " and will retry (attempt #{} of {})".format(
+                            ex, sleep_for, attempt, no_of_retry
+                        )
+                    )
+                    #200ms of sleep time in cons. retry calls 
+                    sleep(sleep_for)
+                    attempt += 1
+                    continue
+                else:
+                    raise
 
     except HTTPException:
         raise
