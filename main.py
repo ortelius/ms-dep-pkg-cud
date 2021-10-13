@@ -28,7 +28,7 @@ validateuser_url = os.getenv("VALIDATEUSER_URL", "http://localhost:5000")
 url = requests.get('https://raw.githubusercontent.com/pyupio/safety-db/master/data/insecure_full.json')
 safety_db = json.loads(url.text)
 
-engine = create_engine("postgresql+psycopg2://" + db_user + ":" + db_pass + "@" + db_host + "/" + db_name, pool_pre_ping=True)
+engine = create_engine("postgresql+psycopg2://" + db_user + ":" + db_pass + "@" + db_host + ":" + db_port + "/" + db_name, pool_pre_ping=True)
 
 # health check endpoint
 
