@@ -3,7 +3,7 @@ name: Release Charts
 on:
   push:
     branches:
-      - svc_cat
+      - develop
 
 jobs:
   release:
@@ -28,6 +28,6 @@ jobs:
         uses: helm/chart-releaser-action@v1.2.1
         with:
           charts_dir: chart
-          charts_repo_url: 'https://ortelius.github.io/ortelius'
+          charts_repo_url: 'https://benhpoh.github.io/ortelius'
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
