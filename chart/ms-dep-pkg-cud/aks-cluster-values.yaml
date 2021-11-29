@@ -1,0 +1,40 @@
+Chart: chart/ms-dep-pkg-cud
+ChartNamespace: ortelius
+DockerRepo: quay.io/ortelius/ms-dep-pkg-cud
+DockerSha: bf0ea09ae02c3a0229bfe2f185494d5dcd73f095de630b6edc2e595a1c375884
+DockerTag: deploy-v10.0.0.46-g1287ae3
+EXT: sh
+GitBranch: deploy
+GitCommit: 1287ae3
+GitRepo: ortelius/ortelius-ms-dep-pkg-cud
+GitTag: deploy
+GitUrl: git@github.com:ortelius/ortelius-ms-dep-pkg-cud.git
+RE_PHYSICAL_HOSTNAME: localhost
+RE_PHYSICAL_SERVER: localhost
+aks:
+  admin: true
+  certificate: /root/.ssh/aks.pem
+  cluster: cluster2-aks
+  resourcegroup: cluster1-rg
+application: ortelius-devops
+builddate: Mon Nov 29 22:19:08 UTC 2021
+buildid: a02bd63e-220a-4426-8b9b-105f836ba39d
+buildurl: https://console.cloud.google.com/cloud-build/builds/a02bd63e-220a-4426-8b9b-105f836ba39d?project=eighth-physics-169321
+chart: chart/ms-dep-pkg-cud
+chartnamespace: ortelius
+chartpublish: Y
+component: ms-dep-pkg-cud;deploy;v_46_g1287ae3
+dockerrepo: quay.io/ortelius/ms-dep-pkg-cud
+dockersha: bf0ea09ae02c3a0229bfe2f185494d5dcd73f095de630b6edc2e595a1c375884
+dockertag: deploy-v10.0.0.46-g1287ae3
+dropzone: /tmp/tdm.1446.1
+environment: aks-cluster
+gitcommit: 1287ae3
+gitrepo: ortelius/ortelius-ms-dep-pkg-cud
+gittag: deploy
+giturl: git@github.com:ortelius/ortelius-ms-dep-pkg-cud.git
+image:
+  pullPolicy: Always
+kubectl_context: cluster2-aks-admin
+server_hostname: localhost
+server_name: localhost
