@@ -16,7 +16,7 @@ aks:
   certificate: /root/.ssh/aks.pem
   cluster: cluster2-aks
   resourcegroup: cluster1-rg
-application: ortelius-devops;10_0_1
+application: ortelius-devops;10_0_4
 builddate: Mon Nov 29 22:28:36 UTC 2021
 buildid: 618a483a-0350-48b1-8303-aa749fb22ee8
 buildurl: https://console.cloud.google.com/cloud-build/builds/618a483a-0350-48b1-8303-aa749fb22ee8?project=eighth-physics-169321
@@ -27,7 +27,7 @@ component: ms-dep-pkg-cud;deploy;v10_0_0_47_g84ac62b
 dockerrepo: quay.io/ortelius/ms-dep-pkg-cud
 dockersha: 7f87190e04a7dd4f0e2b61f094d5c78cb16b22378994d77a2b5a3dedc8278b84
 dockertag: deploy-v10.0.0.47-g84ac62b
-dropzone: /tmp/tdm.1453.9
+dropzone: /tmp/tdm.1457.9
 environment: aks-cluster
 gitcommit: 84ac62b
 gitrepo: ortelius/ortelius-ms-dep-pkg-cud
