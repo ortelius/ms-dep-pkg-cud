@@ -16,6 +16,7 @@ import json
 import os
 from typing import Optional
 
+import uvicorn
 import requests
 from fastapi import Body, FastAPI, HTTPException, Request, Response, status
 from pydantic import BaseModel
@@ -151,10 +152,16 @@ async def cyclonedx(request: Request, response: Response, compid: int, cyclonedx
         summary = ''
         license_url = ''
         license_name = ''
-        licenses = component.get('licenses')
-        if (licenses):
-            license_name = licenses[0].get('license').get('name', '')
-            license_url = 'https://spdx.org/licenses/' + license_name + '.html'
+        licenses = component.get('licenses', None)
+        if (licenses is not None and len(licenses) > 0):
+            license = licenses[0].get('license',{})
+            if (license.get('id', None) is not None):
+                license_name = license.get('id')
+            elif (license.get('name', None) is not None):
+                license_name = license.get('name')
+
+            if (len(license_name) > 0):
+                license_url = 'https://spdx.org/licenses/' + license_name + '.html'
         component_data = (compid, packagename, packageversion, bomformat, license_name, license_url, summary)
         components_data.append(component_data)
 
@@ -277,3 +284,6 @@ def saveComponentsData(response, compid, bomformat, components_data):
     except Exception as err:
         print(str(err))
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(err)) from None
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=5003)
