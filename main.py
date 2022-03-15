@@ -13,18 +13,18 @@
 # limitations under the License.
 
 import json
+import logging
 import os
+import socket
+from time import sleep
 from typing import Optional
 
-import uvicorn
 import requests
+import uvicorn
 from fastapi import Body, FastAPI, HTTPException, Request, Response, status
 from pydantic import BaseModel
 from sqlalchemy import create_engine
-from sqlalchemy.exc import OperationalError, StatementError
-from time import sleep
-import logging
-
+from sqlalchemy.exc import OperationalError, StatementError, InterfaceError
 # Init Globals
 service_name = 'ortelius-ms-dep-pkg-cud'
 db_conn_retry = 3
@@ -38,7 +38,12 @@ db_name = os.getenv("DB_NAME", "postgres")
 db_user = os.getenv("DB_USER", "postgres")
 db_pass = os.getenv("DB_PASS", "postgres")
 db_port = os.getenv("DB_PORT", "5432")
-validateuser_url = os.getenv("VALIDATEUSER_URL", "http://localhost:5000")
+validateuser_url = os.getenv('VALIDATEUSER_URL', None )
+
+if (validateuser_url is None):
+    validateuser_host = os.getenv('MS_VALIDATE_USER_SERVICE_HOST', '127.0.0.1')
+    host = socket.gethostbyaddr(validateuser_host)[0]
+    validateuser_url = 'http://' + host + ':' + str(os.getenv('MS_VALIDATE_USER_SERVICE_PORT', 80))
 
 url = requests.get('https://raw.githubusercontent.com/pyupio/safety-db/master/data/insecure_full.json')
 safety_db = json.loads(url.text)
