@@ -172,6 +172,67 @@ async def cyclonedx(request: Request, response: Response, compid: int, cyclonedx
 
     return saveComponentsData(response, compid, bomformat, components_data)
 
+@app.post('/msapi/deppkg/spdx',
+          response_model=Message,
+          responses={
+              401: {"model": Message,
+                    "description": "Authorization Status",
+                    "content": {
+                        "application/json": {
+                            "example": {"detail": "Authorization failed"}
+                        },
+                    },
+                    },
+              500: {"model": Message,
+                    "description": "SQL Error",
+                    "content": {
+                        "application/json": {
+                            "example": {"detail": "SQL Error: 30x"}
+                        },
+                    },
+                    },
+              200: {
+                  "model": Message,
+                  "description": "Success Message",
+                  "content": {
+                      "application/json": {
+                          "example": {"detail": "Component updated successfully"}
+                      }
+                  },
+              },
+          }
+          )
+async def spdx(request: Request, response: Response, compid: int, spdx_json: dict = Body(...,example=example('spdx.json'),description='JSON output from running SPDX')):
+    try:
+        result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies)
+        if (result is None):
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed")
+
+        if (result.status_code != status.HTTP_200_OK):
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed status_code=" + str(result.status_code))
+    except Exception as err:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed:" + str(err)) from None
+
+    components_data = []
+    components = spdx_json.get('packages', [])
+
+    # Parse SPDX BOM for licenses
+    bomformat = 'spdx_json'
+    for component in (components):
+        packagename = component.get('name')
+        packageversion = component.get('versionInfo', '')
+        summary = ''
+        license_url = ''
+        license_name = ''
+        license = component.get('licenseDeclared')
+        if (license != 'NOASSERTION'):
+            license_name = license
+            license_url = 'https://spdx.org/licenses/' + license_name + '.html'
+        component_data = (compid, packagename, packageversion, bomformat, license_name, license_url, summary)
+        components_data.append(component_data)
+
+    return saveComponentsData(response, compid, bomformat, components_data)
+
 
 @app.post('/msapi/deppkg/safety',
           response_model=Message,
