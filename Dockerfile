@@ -23,6 +23,9 @@ ENV DB_PORT 5432
 WORKDIR /app
 
 COPY main.py /app
+COPY safety.json /app
+COPY spdx.json /app
+COPY cyclonedx.json /app
 COPY requirements.txt /app
 RUN pip install -r requirements.txt; \
 python -m pip uninstall -y pip;
