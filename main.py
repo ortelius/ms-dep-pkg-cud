@@ -93,6 +93,7 @@ async def health(response: Response):
         response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
         return {"status": 'DOWN'}
 
+
 # validate user endpoint
 
 def example(filename):
