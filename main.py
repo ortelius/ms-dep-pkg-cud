@@ -299,7 +299,10 @@ def saveComponentsData(response, compid, bomformat, components_data):
         if len(components_data) == 0:
             return {"detail": "components not updated"}
         
-                #Retry logic for failed query
+        # remove dups
+        components_data = list(set(components_data))
+
+        #Retry logic for failed query
         no_of_retry = db_conn_retry
         attempt = 1;
         while True:
