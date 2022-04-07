@@ -233,7 +233,6 @@ async def spdx(request: Request, response: Response, compid: int, spdx_json: dic
 
     return saveComponentsData(response, compid, bomformat, components_data)
 
-
 @app.post('/msapi/deppkg/safety',
           response_model=Message,
           responses={
