@@ -12,21 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM quay.io/ortelius/ms-python-base:fastapi-1.1 as base
-
-ENV DB_HOST localhost
-ENV DB_NAME postgres
-ENV DB_USER postgres
-ENV DB_PASS postgres
-ENV DB_PORT 5432
-
-WORKDIR /app
-
-COPY main.py /app
-COPY safety.json /app
-COPY spdx.json /app
-COPY cyclonedx.json /app
-COPY requirements.txt /app
-RUN pip install -r requirements.txt; \
-python -m pip uninstall -y pip;
-
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "ms-dep-pkg-cud.name" . }}
+spec:
+  selector:
+    app: {{ include "ms-dep-pkg-cud.name" . }}
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: NodePort
+---
