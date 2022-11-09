@@ -155,6 +155,11 @@ async def cyclonedx(request: Request, response: Response, compid: int, cyclonedx
     for component in (components):
         packagename = component.get('name')
         packageversion = component.get('version', '')
+        purl = component.get('purl', '')
+        pkgtype = ""
+        if (':' in purl):
+            pkgtype = purl.split('/')[0][4:]
+         
         summary = ''
         license_url = ''
         license_name = ''
@@ -168,7 +173,7 @@ async def cyclonedx(request: Request, response: Response, compid: int, cyclonedx
 
             if (len(license_name) > 0):
                 license_url = 'https://spdx.org/licenses/' + license_name + '.html'
-        component_data = (compid, packagename, packageversion, bomformat, license_name, license_url, summary)
+        component_data = (compid, packagename, packageversion, bomformat, license_name, license_url, summary, purl, pkgtype)
         components_data.append(component_data)
 
     return saveComponentsData(response, compid, bomformat, components_data)
@@ -222,6 +227,18 @@ async def spdx(request: Request, response: Response, compid: int, spdx_json: dic
     for component in (components):
         packagename = component.get('name')
         packageversion = component.get('versionInfo', '')
+        extpkgs = component.get('externalRefs', [])
+        purl = ""
+        pkgtype = ""
+
+        for pkgref in extpkgs:
+            reftype = pkgref.get('referenceType', None)
+            if ( reftype is not None and reftype == "purl"):
+                purl = pkgref.get('referenceLocator', '')
+                
+                if (':' in purl):
+                    pkgtype = purl.split('/')[0][4:]
+
         summary = ''
         license_url = ''
         license_name = ''
@@ -229,7 +246,7 @@ async def spdx(request: Request, response: Response, compid: int, spdx_json: dic
         if (license != 'NOASSERTION'):
             license_name = license
             license_url = 'https://spdx.org/licenses/' + license_name + '.html'
-        component_data = (compid, packagename, packageversion, bomformat, license_name, license_url, summary)
+        component_data = (compid, packagename, packageversion, bomformat, license_name, license_url, summary, purl, pkgtype)
         components_data.append(component_data)
 
     return saveComponentsData(response, compid, bomformat, components_data)
@@ -319,7 +336,7 @@ def saveComponentsData(response, compid, bomformat, components_data):
                     cursor.execute(sql, params)
 
                     # insert into database
-                    sql = 'INSERT INTO dm_componentdeps(compid, packagename, packageversion, deptype, name, url, summary) VALUES {}'.format(records_list_template)
+                    sql = 'INSERT INTO dm_componentdeps(compid, packagename, packageversion, deptype, name, url, summary, purl, pkgtype) VALUES {}'.format(records_list_template)
 
                     cursor.execute(sql, components_data)
 
