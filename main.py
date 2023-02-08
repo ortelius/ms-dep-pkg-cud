@@ -114,7 +114,7 @@ async def cyclonedx(request: Request, response: Response, compid: int, cyclonedx
         pkgtype = ""
         if (':' in purl):
             pkgtype = purl.split('/')[0][4:]
-         
+
         summary = ''
         license_url = ''
         license_name = ''
@@ -161,7 +161,7 @@ async def spdx(request: Request, response: Response, compid: int, spdx_json: dic
             reftype = pkgref.get('referenceType', None)
             if ( reftype is not None and reftype == "purl"):
                 purl = pkgref.get('referenceLocator', '')
-                
+
                 if (':' in purl):
                     pkgtype = purl.split('/')[0][4:]
 
@@ -212,7 +212,7 @@ def saveComponentsData(response, compid, bomformat, components_data):
     try:
         if len(components_data) == 0:
             return {"detail": "components not updated"}
-        
+
         # remove dups
         components_data = list(set(components_data))
 
@@ -255,7 +255,7 @@ def saveComponentsData(response, compid, bomformat, components_data):
                             ex, sleep_for, attempt, no_of_retry
                         )
                     )
-                    #200ms of sleep time in cons. retry calls 
+                    #200ms of sleep time in cons. retry calls
                     sleep(sleep_for)
                     attempt += 1
                     continue
