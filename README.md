@@ -16,21 +16,21 @@ Microservice
 - url: localhost:5000/msapi/deppkg
 
 methods:
-  
-- POST 
 
-  sample call: 
+- POST
+
+  sample call:
 
    ```
    curl -X POST - -H "Content-Type: application/json" -d @FILENAME DESTINATION http://localhost:5000/msapi/deppkg?compid=1234
    ```
 
-- DELETE 
-        
+- DELETE
+
   Deletes component by component id passed as query Parameter
-        
-  sample call: 
-        
+
+  sample call:
+
   ```
   curl -X DELETE localhost:5000/msapi/compitem?comp_id=1
   ```
