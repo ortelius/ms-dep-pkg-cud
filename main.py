@@ -30,7 +30,11 @@ service_name = 'ortelius-ms-dep-pkg-cud'
 db_conn_retry = 3
 
 # Init FastAPI
-app = FastAPI()
+app = FastAPI(
+    title=service_name,
+    description=service_name
+)
+
 
 # Init db connection
 db_host = os.getenv("DB_HOST", "localhost")
@@ -51,33 +55,13 @@ safety_db = json.loads(url.text)
 engine = create_engine("postgresql+psycopg2://" + db_user + ":" + db_pass + "@" + db_host + ":" + db_port + "/" + db_name, pool_pre_ping=True)
 
 # health check endpoint
-
 class StatusMsg(BaseModel):
     status: str
     service_name: Optional[str] = None
 
 
-@app.get("/health",
-         responses={
-             503: {"model": StatusMsg,
-                   "description": "DOWN Status for the Service",
-                   "content": {
-                       "application/json": {
-                           "example": {"status": 'DOWN'}
-                       },
-                   },
-                   },
-             200: {"model": StatusMsg,
-                   "description": "UP Status for the Service",
-                   "content": {
-                       "application/json": {
-                           "example": {"status": 'UP', "service_name": service_name}
-                       }
-                   },
-                   },
-         }
-         )
-async def health(response: Response):
+@app.get("/health")
+async def health(response: Response) -> StatusMsg:
     try:
         with engine.connect() as connection:
             conn = connection.connection
@@ -92,7 +76,7 @@ async def health(response: Response):
         print(str(err))
         response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
         return {"status": 'DOWN'}
-
+# end health check
 
 # validate user endpoint
 
@@ -106,36 +90,7 @@ class Message(BaseModel):
     detail: str
 
 
-@app.post('/msapi/deppkg/cyclonedx',
-          response_model=Message,
-          responses={
-              401: {"model": Message,
-                    "description": "Authorization Status",
-                    "content": {
-                        "application/json": {
-                            "example": {"detail": "Authorization failed"}
-                        },
-                    },
-                    },
-              500: {"model": Message,
-                    "description": "SQL Error",
-                    "content": {
-                        "application/json": {
-                            "example": {"detail": "SQL Error: 30x"}
-                        },
-                    },
-                    },
-              200: {
-                  "model": Message,
-                  "description": "Success Message",
-                  "content": {
-                      "application/json": {
-                          "example": {"detail": "Component updated successfully"}
-                      }
-                  },
-              },
-          }
-          )
+@app.post('/msapi/deppkg/cyclonedx')
 async def cyclonedx(request: Request, response: Response, compid: int, cyclonedx_json: dict = Body(...,example=example('cyclonedx.json'),description='JSON output from running CycloneDX')):
     try:
         result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies)
@@ -178,36 +133,7 @@ async def cyclonedx(request: Request, response: Response, compid: int, cyclonedx
 
     return saveComponentsData(response, compid, bomformat, components_data)
 
-@app.post('/msapi/deppkg/spdx',
-          response_model=Message,
-          responses={
-              401: {"model": Message,
-                    "description": "Authorization Status",
-                    "content": {
-                        "application/json": {
-                            "example": {"detail": "Authorization failed"}
-                        },
-                    },
-                    },
-              500: {"model": Message,
-                    "description": "SQL Error",
-                    "content": {
-                        "application/json": {
-                            "example": {"detail": "SQL Error: 30x"}
-                        },
-                    },
-                    },
-              200: {
-                  "model": Message,
-                  "description": "Success Message",
-                  "content": {
-                      "application/json": {
-                          "example": {"detail": "Component updated successfully"}
-                      }
-                  },
-              },
-          }
-          )
+@app.post('/msapi/deppkg/spdx')
 async def spdx(request: Request, response: Response, compid: int, spdx_json: dict = Body(...,example=example('spdx.json'),description='JSON output from running SPDX')):
     try:
         result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies)
@@ -251,36 +177,7 @@ async def spdx(request: Request, response: Response, compid: int, spdx_json: dic
 
     return saveComponentsData(response, compid, bomformat, components_data)
 
-@app.post('/msapi/deppkg/safety',
-          response_model=Message,
-          responses={
-              401: {"model": Message,
-                    "description": "Authorization Status",
-                    "content": {
-                        "application/json": {
-                            "example": {"detail": "Authorization failed"}
-                        },
-                    },
-                    },
-              500: {"model": Message,
-                    "description": "SQL Error",
-                    "content": {
-                        "application/json": {
-                            "example": {"detail": "SQL Error: 30x"}
-                        },
-                    },
-                    },
-              200: {
-                  "model": Message,
-                  "description": "Success Message",
-                  "content": {
-                      "application/json": {
-                          "example": {"detail": "Component updated successfully"}
-                      }
-                  },
-              },
-          }
-          )
+@app.post('/msapi/deppkg/safety')
 async def safety(request: Request, response: Response, compid: int, safety_json: list = Body(...,example=example('safety.json'),description='JSON output from running safety')):
     result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies)
     if (result is None):
