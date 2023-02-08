@@ -1,0 +1,2024 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://json.schemastore.org/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "fullName": "Trivy Vulnerability Scanner",
+          "informationUri": "https://github.com/aquasecurity/trivy",
+          "name": "Trivy",
+          "rules": [
+            {
+              "id": "CVE-2022-28391",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "busybox: remote attackers may execute arbitrary code if netstat is used"
+              },
+              "fullDescription": {
+                "text": "BusyBox through 1.35.0 allows remote attackers to execute arbitrary code if netstat is used to print a DNS PTR record\u0026#39;s value to a VT compatible terminal. Alternatively, the attacker could choose to change the terminal\u0026#39;s colors."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2022-28391",
+              "help": {
+                "text": "Vulnerability CVE-2022-28391\nSeverity: HIGH\nPackage: ssl_client\nFixed Version: 1.33.1-r7\nLink: [CVE-2022-28391](https://avd.aquasec.com/nvd/cve-2022-28391)\nBusyBox through 1.35.0 allows remote attackers to execute arbitrary code if netstat is used to print a DNS PTR record's value to a VT compatible terminal. Alternatively, the attacker could choose to change the terminal's colors.",
+                "markdown": "**Vulnerability CVE-2022-28391**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|ssl_client|1.33.1-r7|[CVE-2022-28391](https://avd.aquasec.com/nvd/cve-2022-28391)|\n\nBusyBox through 1.35.0 allows remote attackers to execute arbitrary code if netstat is used to print a DNS PTR record's value to a VT compatible terminal. Alternatively, the attacker could choose to change the terminal's colors."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.8",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2022-23852",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "expat: Integer overflow in function XML_GetBuffer"
+              },
+              "fullDescription": {
+                "text": "Expat (aka libexpat) before 2.4.4 has a signed integer overflow in XML_GetBuffer, for configurations with a nonzero XML_CONTEXT_BYTES."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2022-23852",
+              "help": {
+                "text": "Vulnerability CVE-2022-23852\nSeverity: CRITICAL\nPackage: expat\nFixed Version: 2.4.4-r0\nLink: [CVE-2022-23852](https://avd.aquasec.com/nvd/cve-2022-23852)\nExpat (aka libexpat) before 2.4.4 has a signed integer overflow in XML_GetBuffer, for configurations with a nonzero XML_CONTEXT_BYTES.",
+                "markdown": "**Vulnerability CVE-2022-23852**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|CRITICAL|expat|2.4.4-r0|[CVE-2022-23852](https://avd.aquasec.com/nvd/cve-2022-23852)|\n\nExpat (aka libexpat) before 2.4.4 has a signed integer overflow in XML_GetBuffer, for configurations with a nonzero XML_CONTEXT_BYTES."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "9.8",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "CRITICAL"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2022-25235",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "expat: Malformed 2- and 3-byte UTF-8 sequences can lead to arbitrary code execution"
+              },
+              "fullDescription": {
+                "text": "xmltok_impl.c in Expat (aka libexpat) before 2.4.5 lacks certain validation of encoding, such as checks for whether a UTF-8 character is valid in a certain context."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2022-25235",
+              "help": {
+                "text": "Vulnerability CVE-2022-25235\nSeverity: CRITICAL\nPackage: expat\nFixed Version: 2.4.5-r0\nLink: [CVE-2022-25235](https://avd.aquasec.com/nvd/cve-2022-25235)\nxmltok_impl.c in Expat (aka libexpat) before 2.4.5 lacks certain validation of encoding, such as checks for whether a UTF-8 character is valid in a certain context.",
+                "markdown": "**Vulnerability CVE-2022-25235**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|CRITICAL|expat|2.4.5-r0|[CVE-2022-25235](https://avd.aquasec.com/nvd/cve-2022-25235)|\n\nxmltok_impl.c in Expat (aka libexpat) before 2.4.5 lacks certain validation of encoding, such as checks for whether a UTF-8 character is valid in a certain context."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "9.8",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "CRITICAL"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2022-25236",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "expat: Namespace-separator characters in \u0026#34;xmlns[:prefix]\u0026#34; attribute values can lead to arbitrary code execution"
+              },
+              "fullDescription": {
+                "text": "xmlparse.c in Expat (aka libexpat) before 2.4.5 allows attackers to insert namespace-separator characters into namespace URIs."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2022-25236",
+              "help": {
+                "text": "Vulnerability CVE-2022-25236\nSeverity: CRITICAL\nPackage: expat\nFixed Version: 2.4.5-r0\nLink: [CVE-2022-25236](https://avd.aquasec.com/nvd/cve-2022-25236)\nxmlparse.c in Expat (aka libexpat) before 2.4.5 allows attackers to insert namespace-separator characters into namespace URIs.",
+                "markdown": "**Vulnerability CVE-2022-25236**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|CRITICAL|expat|2.4.5-r0|[CVE-2022-25236](https://avd.aquasec.com/nvd/cve-2022-25236)|\n\nxmlparse.c in Expat (aka libexpat) before 2.4.5 allows attackers to insert namespace-separator characters into namespace URIs."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "9.8",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "CRITICAL"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2022-25315",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "expat: Integer overflow in storeRawNames()"
+              },
+              "fullDescription": {
+                "text": "In Expat (aka libexpat) before 2.4.5, there is an integer overflow in storeRawNames."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2022-25315",
+              "help": {
+                "text": "Vulnerability CVE-2022-25315\nSeverity: CRITICAL\nPackage: expat\nFixed Version: 2.4.5-r0\nLink: [CVE-2022-25315](https://avd.aquasec.com/nvd/cve-2022-25315)\nIn Expat (aka libexpat) before 2.4.5, there is an integer overflow in storeRawNames.",
+                "markdown": "**Vulnerability CVE-2022-25315**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|CRITICAL|expat|2.4.5-r0|[CVE-2022-25315](https://avd.aquasec.com/nvd/cve-2022-25315)|\n\nIn Expat (aka libexpat) before 2.4.5, there is an integer overflow in storeRawNames."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "9.8",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "CRITICAL"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2022-23990",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "expat: integer overflow in the doProlog function"
+              },
+              "fullDescription": {
+                "text": "Expat (aka libexpat) before 2.4.4 has an integer overflow in the doProlog function."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2022-23990",
+              "help": {
+                "text": "Vulnerability CVE-2022-23990\nSeverity: HIGH\nPackage: expat\nFixed Version: 2.4.4-r0\nLink: [CVE-2022-23990](https://avd.aquasec.com/nvd/cve-2022-23990)\nExpat (aka libexpat) before 2.4.4 has an integer overflow in the doProlog function.",
+                "markdown": "**Vulnerability CVE-2022-23990**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|expat|2.4.4-r0|[CVE-2022-23990](https://avd.aquasec.com/nvd/cve-2022-23990)|\n\nExpat (aka libexpat) before 2.4.4 has an integer overflow in the doProlog function."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2022-25314",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "expat: Integer overflow in copyString()"
+              },
+              "fullDescription": {
+                "text": "In Expat (aka libexpat) before 2.4.5, there is an integer overflow in copyString."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2022-25314",
+              "help": {
+                "text": "Vulnerability CVE-2022-25314\nSeverity: HIGH\nPackage: expat\nFixed Version: 2.4.5-r0\nLink: [CVE-2022-25314](https://avd.aquasec.com/nvd/cve-2022-25314)\nIn Expat (aka libexpat) before 2.4.5, there is an integer overflow in copyString.",
+                "markdown": "**Vulnerability CVE-2022-25314**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|expat|2.4.5-r0|[CVE-2022-25314](https://avd.aquasec.com/nvd/cve-2022-25314)|\n\nIn Expat (aka libexpat) before 2.4.5, there is an integer overflow in copyString."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2022-40674",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "expat: a use-after-free in the doContent function in xmlparse.c"
+              },
+              "fullDescription": {
+                "text": "libexpat before 2.4.9 has a use-after-free in the doContent function in xmlparse.c."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2022-40674",
+              "help": {
+                "text": "Vulnerability CVE-2022-40674\nSeverity: HIGH\nPackage: expat\nFixed Version: 2.4.9-r0\nLink: [CVE-2022-40674](https://avd.aquasec.com/nvd/cve-2022-40674)\nlibexpat before 2.4.9 has a use-after-free in the doContent function in xmlparse.c.",
+                "markdown": "**Vulnerability CVE-2022-40674**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|expat|2.4.9-r0|[CVE-2022-40674](https://avd.aquasec.com/nvd/cve-2022-40674)|\n\nlibexpat before 2.4.9 has a use-after-free in the doContent function in xmlparse.c."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.1",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2022-43680",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "expat: use-after free caused by overeager destruction of a shared DTD in XML_ExternalEntityParserCreate"
+              },
+              "fullDescription": {
+                "text": "In libexpat through 2.4.9, there is a use-after free caused by overeager destruction of a shared DTD in XML_ExternalEntityParserCreate in out-of-memory situations."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2022-43680",
+              "help": {
+                "text": "Vulnerability CVE-2022-43680\nSeverity: HIGH\nPackage: expat\nFixed Version: 2.5.0-r0\nLink: [CVE-2022-43680](https://avd.aquasec.com/nvd/cve-2022-43680)\nIn libexpat through 2.4.9, there is a use-after free caused by overeager destruction of a shared DTD in XML_ExternalEntityParserCreate in out-of-memory situations.",
+                "markdown": "**Vulnerability CVE-2022-43680**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|expat|2.5.0-r0|[CVE-2022-43680](https://avd.aquasec.com/nvd/cve-2022-43680)|\n\nIn libexpat through 2.4.9, there is a use-after free caused by overeager destruction of a shared DTD in XML_ExternalEntityParserCreate in out-of-memory situations."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2022-25313",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "expat: Stack exhaustion in doctype parsing"
+              },
+              "fullDescription": {
+                "text": "In Expat (aka libexpat) before 2.4.5, an attacker can trigger stack exhaustion in build_model via a large nesting depth in the DTD element."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2022-25313",
+              "help": {
+                "text": "Vulnerability CVE-2022-25313\nSeverity: MEDIUM\nPackage: expat\nFixed Version: 2.4.5-r0\nLink: [CVE-2022-25313](https://avd.aquasec.com/nvd/cve-2022-25313)\nIn Expat (aka libexpat) before 2.4.5, an attacker can trigger stack exhaustion in build_model via a large nesting depth in the DTD element.",
+                "markdown": "**Vulnerability CVE-2022-25313**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|expat|2.4.5-r0|[CVE-2022-25313](https://avd.aquasec.com/nvd/cve-2022-25313)|\n\nIn Expat (aka libexpat) before 2.4.5, an attacker can trigger stack exhaustion in build_model via a large nesting depth in the DTD element."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "6.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2021-37750",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "krb5: NULL pointer dereference in process_tgs_req() in kdc/do_tgs_req.c via a FAST inner body that lacks server field"
+              },
+              "fullDescription": {
+                "text": "The Key Distribution Center (KDC) in MIT Kerberos 5 (aka krb5) before 1.18.5 and 1.19.x before 1.19.3 has a NULL pointer dereference in kdc/do_tgs_req.c via a FAST inner body that lacks a server field."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2021-37750",
+              "help": {
+                "text": "Vulnerability CVE-2021-37750\nSeverity: MEDIUM\nPackage: krb5-libs\nFixed Version: 1.18.5-r0\nLink: [CVE-2021-37750](https://avd.aquasec.com/nvd/cve-2021-37750)\nThe Key Distribution Center (KDC) in MIT Kerberos 5 (aka krb5) before 1.18.5 and 1.19.x before 1.19.3 has a NULL pointer dereference in kdc/do_tgs_req.c via a FAST inner body that lacks a server field.",
+                "markdown": "**Vulnerability CVE-2021-37750**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|krb5-libs|1.18.5-r0|[CVE-2021-37750](https://avd.aquasec.com/nvd/cve-2021-37750)|\n\nThe Key Distribution Center (KDC) in MIT Kerberos 5 (aka krb5) before 1.18.5 and 1.19.x before 1.19.3 has a NULL pointer dereference in kdc/do_tgs_req.c via a FAST inner body that lacks a server field."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "6.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2022-0778",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "openssl: Infinite loop in BN_mod_sqrt() reachable when parsing certificates"
+              },
+              "fullDescription": {
+                "text": "The BN_mod_sqrt() function, which computes a modular square root, contains a bug that can cause it to loop forever for non-prime moduli. Internally this function is used when parsing certificates that contain elliptic curve public keys in compressed form or explicit elliptic curve parameters with a base point encoded in compressed form. It is possible to trigger the infinite loop by crafting a certificate that has invalid explicit curve parameters. Since certificate parsing happens prior to verification of the certificate signature, any process that parses an externally supplied certificate may thus be subject to a denial of service attack. The infinite loop can also be reached when parsing crafted private keys as they can contain explicit elliptic curve parameters. Thus vulnerable situations include: - TLS clients consuming server certificates - TLS servers consuming client certificates - Hosting providers taking certificates or private keys from customers - Certificate authorities parsing certification requests from subscribers - Anything else which parses ASN.1 elliptic curve parameters Also any other applications that use the BN_mod_sqrt() where the attacker can control the parameter values are vulnerable to this DoS issue. In the OpenSSL 1.0.2 version the public key is not parsed during initial parsing of the certificate which makes it slightly harder to trigger the infinite loop. However any operation which requires the public key from the certificate will trigger the infinite loop. In particular the attacker can use a self-signed certificate to trigger the loop during verification of the certificate signature. This issue affects OpenSSL versions 1.0.2, 1.1.1 and 3.0. It was addressed in the releases of 1.1.1n and 3.0.2 on the 15th March 2022. Fixed in OpenSSL 3.0.2 (Affected 3.0.0,3.0.1). Fixed in OpenSSL 1.1.1n (Affected 1.1.1-1.1.1m). Fixed in OpenSSL 1.0.2zd (Affected 1.0.2-1.0.2zc)."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2022-0778",
+              "help": {
+                "text": "Vulnerability CVE-2022-0778\nSeverity: HIGH\nPackage: libssl1.1\nFixed Version: 1.1.1n-r0\nLink: [CVE-2022-0778](https://avd.aquasec.com/nvd/cve-2022-0778)\nThe BN_mod_sqrt() function, which computes a modular square root, contains a bug that can cause it to loop forever for non-prime moduli. Internally this function is used when parsing certificates that contain elliptic curve public keys in compressed form or explicit elliptic curve parameters with a base point encoded in compressed form. It is possible to trigger the infinite loop by crafting a certificate that has invalid explicit curve parameters. Since certificate parsing happens prior to verification of the certificate signature, any process that parses an externally supplied certificate may thus be subject to a denial of service attack. The infinite loop can also be reached when parsing crafted private keys as they can contain explicit elliptic curve parameters. Thus vulnerable situations include: - TLS clients consuming server certificates - TLS servers consuming client certificates - Hosting providers taking certificates or private keys from customers - Certificate authorities parsing certification requests from subscribers - Anything else which parses ASN.1 elliptic curve parameters Also any other applications that use the BN_mod_sqrt() where the attacker can control the parameter values are vulnerable to this DoS issue. In the OpenSSL 1.0.2 version the public key is not parsed during initial parsing of the certificate which makes it slightly harder to trigger the infinite loop. However any operation which requires the public key from the certificate will trigger the infinite loop. In particular the attacker can use a self-signed certificate to trigger the loop during verification of the certificate signature. This issue affects OpenSSL versions 1.0.2, 1.1.1 and 3.0. It was addressed in the releases of 1.1.1n and 3.0.2 on the 15th March 2022. Fixed in OpenSSL 3.0.2 (Affected 3.0.0,3.0.1). Fixed in OpenSSL 1.1.1n (Affected 1.1.1-1.1.1m). Fixed in OpenSSL 1.0.2zd (Affected 1.0.2-1.0.2zc).",
+                "markdown": "**Vulnerability CVE-2022-0778**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|libssl1.1|1.1.1n-r0|[CVE-2022-0778](https://avd.aquasec.com/nvd/cve-2022-0778)|\n\nThe BN_mod_sqrt() function, which computes a modular square root, contains a bug that can cause it to loop forever for non-prime moduli. Internally this function is used when parsing certificates that contain elliptic curve public keys in compressed form or explicit elliptic curve parameters with a base point encoded in compressed form. It is possible to trigger the infinite loop by crafting a certificate that has invalid explicit curve parameters. Since certificate parsing happens prior to verification of the certificate signature, any process that parses an externally supplied certificate may thus be subject to a denial of service attack. The infinite loop can also be reached when parsing crafted private keys as they can contain explicit elliptic curve parameters. Thus vulnerable situations include: - TLS clients consuming server certificates - TLS servers consuming client certificates - Hosting providers taking certificates or private keys from customers - Certificate authorities parsing certification requests from subscribers - Anything else which parses ASN.1 elliptic curve parameters Also any other applications that use the BN_mod_sqrt() where the attacker can control the parameter values are vulnerable to this DoS issue. In the OpenSSL 1.0.2 version the public key is not parsed during initial parsing of the certificate which makes it slightly harder to trigger the infinite loop. However any operation which requires the public key from the certificate will trigger the infinite loop. In particular the attacker can use a self-signed certificate to trigger the loop during verification of the certificate signature. This issue affects OpenSSL versions 1.0.2, 1.1.1 and 3.0. It was addressed in the releases of 1.1.1n and 3.0.2 on the 15th March 2022. Fixed in OpenSSL 3.0.2 (Affected 3.0.0,3.0.1). Fixed in OpenSSL 1.1.1n (Affected 1.1.1-1.1.1m). Fixed in OpenSSL 1.0.2zd (Affected 1.0.2-1.0.2zc)."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2023-0286",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "[openssl: X.400 address type confusion in X.509 GeneralName]"
+              },
+              "fullDescription": {
+                "text": "X.400 address type confusion in X.509 GeneralName"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2023-0286",
+              "help": {
+                "text": "Vulnerability CVE-2023-0286\nSeverity: HIGH\nPackage: libssl1.1\nFixed Version: 1.1.1t-r0\nLink: [CVE-2023-0286](https://avd.aquasec.com/nvd/cve-2023-0286)\nX.400 address type confusion in X.509 GeneralName",
+                "markdown": "**Vulnerability CVE-2023-0286**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|libssl1.1|1.1.1t-r0|[CVE-2023-0286](https://avd.aquasec.com/nvd/cve-2023-0286)|\n\nX.400 address type confusion in X.509 GeneralName"
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2022-2097",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "openssl: AES OCB fails to encrypt some bytes"
+              },
+              "fullDescription": {
+                "text": "AES OCB mode for 32-bit x86 platforms using the AES-NI assembly optimised implementation will not encrypt the entirety of the data under some circumstances. This could reveal sixteen bytes of data that was preexisting in the memory that wasn\u0026#39;t written. In the special case of \u0026#34;in place\u0026#34; encryption, sixteen bytes of the plaintext would be revealed. Since OpenSSL does not support OCB based cipher suites for TLS and DTLS, they are both unaffected. Fixed in OpenSSL 3.0.5 (Affected 3.0.0-3.0.4). Fixed in OpenSSL 1.1.1q (Affected 1.1.1-1.1.1p)."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2022-2097",
+              "help": {
+                "text": "Vulnerability CVE-2022-2097\nSeverity: MEDIUM\nPackage: libssl1.1\nFixed Version: 1.1.1q-r0\nLink: [CVE-2022-2097](https://avd.aquasec.com/nvd/cve-2022-2097)\nAES OCB mode for 32-bit x86 platforms using the AES-NI assembly optimised implementation will not encrypt the entirety of the data under some circumstances. This could reveal sixteen bytes of data that was preexisting in the memory that wasn't written. In the special case of \"in place\" encryption, sixteen bytes of the plaintext would be revealed. Since OpenSSL does not support OCB based cipher suites for TLS and DTLS, they are both unaffected. Fixed in OpenSSL 3.0.5 (Affected 3.0.0-3.0.4). Fixed in OpenSSL 1.1.1q (Affected 1.1.1-1.1.1p).",
+                "markdown": "**Vulnerability CVE-2022-2097**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|libssl1.1|1.1.1q-r0|[CVE-2022-2097](https://avd.aquasec.com/nvd/cve-2022-2097)|\n\nAES OCB mode for 32-bit x86 platforms using the AES-NI assembly optimised implementation will not encrypt the entirety of the data under some circumstances. This could reveal sixteen bytes of data that was preexisting in the memory that wasn't written. In the special case of \"in place\" encryption, sixteen bytes of the plaintext would be revealed. Since OpenSSL does not support OCB based cipher suites for TLS and DTLS, they are both unaffected. Fixed in OpenSSL 3.0.5 (Affected 3.0.0-3.0.4). Fixed in OpenSSL 1.1.1q (Affected 1.1.1-1.1.1p)."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2022-4304",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "[openssl: Timing Oracle in RSA Decryption]"
+              },
+              "fullDescription": {
+                "text": "Timing Oracle in RSA Decryption"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2022-4304",
+              "help": {
+                "text": "Vulnerability CVE-2022-4304\nSeverity: MEDIUM\nPackage: libssl1.1\nFixed Version: 1.1.1t-r0\nLink: [CVE-2022-4304](https://avd.aquasec.com/nvd/cve-2022-4304)\nTiming Oracle in RSA Decryption",
+                "markdown": "**Vulnerability CVE-2022-4304**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|libssl1.1|1.1.1t-r0|[CVE-2022-4304](https://avd.aquasec.com/nvd/cve-2022-4304)|\n\nTiming Oracle in RSA Decryption"
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2022-4450",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "[openssl: Double free after calling PEM_read_bio_ex]"
+              },
+              "fullDescription": {
+                "text": "Double free after calling PEM_read_bio_ex"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2022-4450",
+              "help": {
+                "text": "Vulnerability CVE-2022-4450\nSeverity: MEDIUM\nPackage: libssl1.1\nFixed Version: 1.1.1t-r0\nLink: [CVE-2022-4450](https://avd.aquasec.com/nvd/cve-2022-4450)\nDouble free after calling PEM_read_bio_ex",
+                "markdown": "**Vulnerability CVE-2022-4450**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|libssl1.1|1.1.1t-r0|[CVE-2022-4450](https://avd.aquasec.com/nvd/cve-2022-4450)|\n\nDouble free after calling PEM_read_bio_ex"
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2023-0215",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "[openssl: Use-after-free following BIO_new_NDEF]"
+              },
+              "fullDescription": {
+                "text": "Use-after-free following BIO_new_NDEF"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2023-0215",
+              "help": {
+                "text": "Vulnerability CVE-2023-0215\nSeverity: MEDIUM\nPackage: libssl1.1\nFixed Version: 1.1.1t-r0\nLink: [CVE-2023-0215](https://avd.aquasec.com/nvd/cve-2023-0215)\nUse-after-free following BIO_new_NDEF",
+                "markdown": "**Vulnerability CVE-2023-0215**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|libssl1.1|1.1.1t-r0|[CVE-2023-0215](https://avd.aquasec.com/nvd/cve-2023-0215)|\n\nUse-after-free following BIO_new_NDEF"
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2022-1552",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "postgresql: Autovacuum, REINDEX, and others omit \u0026#34;security restricted operation\u0026#34; sandbox"
+              },
+              "fullDescription": {
+                "text": "A flaw was found in PostgreSQL. There is an issue with incomplete efforts to operate safely when a privileged user is maintaining another user\u0026#39;s objects. The Autovacuum, REINDEX, CREATE INDEX, REFRESH MATERIALIZED VIEW, CLUSTER, and pg_amcheck commands activated relevant protections too late or not at all during the process. This flaw allows an attacker with permission to create non-temporary objects in at least one schema to execute arbitrary SQL functions under a superuser identity."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2022-1552",
+              "help": {
+                "text": "Vulnerability CVE-2022-1552\nSeverity: HIGH\nPackage: libpq\nFixed Version: 13.7-r0\nLink: [CVE-2022-1552](https://avd.aquasec.com/nvd/cve-2022-1552)\nA flaw was found in PostgreSQL. There is an issue with incomplete efforts to operate safely when a privileged user is maintaining another user's objects. The Autovacuum, REINDEX, CREATE INDEX, REFRESH MATERIALIZED VIEW, CLUSTER, and pg_amcheck commands activated relevant protections too late or not at all during the process. This flaw allows an attacker with permission to create non-temporary objects in at least one schema to execute arbitrary SQL functions under a superuser identity.",
+                "markdown": "**Vulnerability CVE-2022-1552**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|libpq|13.7-r0|[CVE-2022-1552](https://avd.aquasec.com/nvd/cve-2022-1552)|\n\nA flaw was found in PostgreSQL. There is an issue with incomplete efforts to operate safely when a privileged user is maintaining another user's objects. The Autovacuum, REINDEX, CREATE INDEX, REFRESH MATERIALIZED VIEW, CLUSTER, and pg_amcheck commands activated relevant protections too late or not at all during the process. This flaw allows an attacker with permission to create non-temporary objects in at least one schema to execute arbitrary SQL functions under a superuser identity."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.8",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2022-2625",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "postgresql: Extension scripts replace objects not belonging to the extension."
+              },
+              "fullDescription": {
+                "text": "A vulnerability was found in PostgreSQL. This attack requires permission to create non-temporary objects in at least one schema, the ability to lure or wait for an administrator to create or update an affected extension in that schema, and the ability to lure or wait for a victim to use the object targeted in CREATE OR REPLACE or CREATE IF NOT EXISTS. Given all three prerequisites, this flaw allows an attacker to run arbitrary code as the victim role, which may be a superuser."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2022-2625",
+              "help": {
+                "text": "Vulnerability CVE-2022-2625\nSeverity: HIGH\nPackage: libpq\nFixed Version: 13.8-r0\nLink: [CVE-2022-2625](https://avd.aquasec.com/nvd/cve-2022-2625)\nA vulnerability was found in PostgreSQL. This attack requires permission to create non-temporary objects in at least one schema, the ability to lure or wait for an administrator to create or update an affected extension in that schema, and the ability to lure or wait for a victim to use the object targeted in CREATE OR REPLACE or CREATE IF NOT EXISTS. Given all three prerequisites, this flaw allows an attacker to run arbitrary code as the victim role, which may be a superuser.",
+                "markdown": "**Vulnerability CVE-2022-2625**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|libpq|13.8-r0|[CVE-2022-2625](https://avd.aquasec.com/nvd/cve-2022-2625)|\n\nA vulnerability was found in PostgreSQL. This attack requires permission to create non-temporary objects in at least one schema, the ability to lure or wait for an administrator to create or update an affected extension in that schema, and the ability to lure or wait for a victim to use the object targeted in CREATE OR REPLACE or CREATE IF NOT EXISTS. Given all three prerequisites, this flaw allows an attacker to run arbitrary code as the victim role, which may be a superuser."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2022-24407",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "cyrus-sasl: failure to properly escape SQL input allows an attacker to execute arbitrary SQL commands"
+              },
+              "fullDescription": {
+                "text": "In Cyrus SASL 2.1.17 through 2.1.27 before 2.1.28, plugins/sql.c does not escape the password for a SQL INSERT or UPDATE statement."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2022-24407",
+              "help": {
+                "text": "Vulnerability CVE-2022-24407\nSeverity: HIGH\nPackage: libsasl\nFixed Version: 2.1.28-r0\nLink: [CVE-2022-24407](https://avd.aquasec.com/nvd/cve-2022-24407)\nIn Cyrus SASL 2.1.17 through 2.1.27 before 2.1.28, plugins/sql.c does not escape the password for a SQL INSERT or UPDATE statement.",
+                "markdown": "**Vulnerability CVE-2022-24407**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|libsasl|2.1.28-r0|[CVE-2022-24407](https://avd.aquasec.com/nvd/cve-2022-24407)|\n\nIn Cyrus SASL 2.1.17 through 2.1.27 before 2.1.28, plugins/sql.c does not escape the password for a SQL INSERT or UPDATE statement."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.8",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2021-46828",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "libtirpc: DoS vulnerability with lots of connections"
+              },
+              "fullDescription": {
+                "text": "In libtirpc before 1.3.3rc1, remote attackers could exhaust the file descriptors of a process that uses libtirpc because idle TCP connections are mishandled. This can, in turn, lead to an svc_run infinite loop without accepting new connections."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2021-46828",
+              "help": {
+                "text": "Vulnerability CVE-2021-46828\nSeverity: HIGH\nPackage: libtirpc-conf\nFixed Version: 1.3.2-r1\nLink: [CVE-2021-46828](https://avd.aquasec.com/nvd/cve-2021-46828)\nIn libtirpc before 1.3.3rc1, remote attackers could exhaust the file descriptors of a process that uses libtirpc because idle TCP connections are mishandled. This can, in turn, lead to an svc_run infinite loop without accepting new connections.",
+                "markdown": "**Vulnerability CVE-2021-46828**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|libtirpc-conf|1.3.2-r1|[CVE-2021-46828](https://avd.aquasec.com/nvd/cve-2021-46828)|\n\nIn libtirpc before 1.3.3rc1, remote attackers could exhaust the file descriptors of a process that uses libtirpc because idle TCP connections are mishandled. This can, in turn, lead to an svc_run infinite loop without accepting new connections."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2021-3995",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "util-linux: Unauthorized unmount of FUSE filesystems belonging to users with similar uid"
+              },
+              "fullDescription": {
+                "text": "A logic error was found in the libmount library of util-linux in the function that allows an unprivileged user to unmount a FUSE filesystem. This flaw allows an unprivileged local attacker to unmount FUSE filesystems that belong to certain other users who have a UID that is a prefix of the UID of the attacker in its string form. An attacker may use this flaw to cause a denial of service to applications that use the affected filesystems."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2021-3995",
+              "help": {
+                "text": "Vulnerability CVE-2021-3995\nSeverity: MEDIUM\nPackage: libuuid\nFixed Version: 2.37.3-r0\nLink: [CVE-2021-3995](https://avd.aquasec.com/nvd/cve-2021-3995)\nA logic error was found in the libmount library of util-linux in the function that allows an unprivileged user to unmount a FUSE filesystem. This flaw allows an unprivileged local attacker to unmount FUSE filesystems that belong to certain other users who have a UID that is a prefix of the UID of the attacker in its string form. An attacker may use this flaw to cause a denial of service to applications that use the affected filesystems.",
+                "markdown": "**Vulnerability CVE-2021-3995**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|libuuid|2.37.3-r0|[CVE-2021-3995](https://avd.aquasec.com/nvd/cve-2021-3995)|\n\nA logic error was found in the libmount library of util-linux in the function that allows an unprivileged user to unmount a FUSE filesystem. This flaw allows an unprivileged local attacker to unmount FUSE filesystems that belong to certain other users who have a UID that is a prefix of the UID of the attacker in its string form. An attacker may use this flaw to cause a denial of service to applications that use the affected filesystems."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2021-3996",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "util-linux: Unauthorized unmount of filesystems in libmount"
+              },
+              "fullDescription": {
+                "text": "A logic error was found in the libmount library of util-linux in the function that allows an unprivileged user to unmount a FUSE filesystem. This flaw allows a local user on a vulnerable system to unmount other users\u0026#39; filesystems that are either world-writable themselves (like /tmp) or mounted in a world-writable directory. An attacker may use this flaw to cause a denial of service to applications that use the affected filesystems."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2021-3996",
+              "help": {
+                "text": "Vulnerability CVE-2021-3996\nSeverity: MEDIUM\nPackage: libuuid\nFixed Version: 2.37.3-r0\nLink: [CVE-2021-3996](https://avd.aquasec.com/nvd/cve-2021-3996)\nA logic error was found in the libmount library of util-linux in the function that allows an unprivileged user to unmount a FUSE filesystem. This flaw allows a local user on a vulnerable system to unmount other users' filesystems that are either world-writable themselves (like /tmp) or mounted in a world-writable directory. An attacker may use this flaw to cause a denial of service to applications that use the affected filesystems.",
+                "markdown": "**Vulnerability CVE-2021-3996**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|libuuid|2.37.3-r0|[CVE-2021-3996](https://avd.aquasec.com/nvd/cve-2021-3996)|\n\nA logic error was found in the libmount library of util-linux in the function that allows an unprivileged user to unmount a FUSE filesystem. This flaw allows a local user on a vulnerable system to unmount other users' filesystems that are either world-writable themselves (like /tmp) or mounted in a world-writable directory. An attacker may use this flaw to cause a denial of service to applications that use the affected filesystems."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2022-0563",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "util-linux: partial disclosure of arbitrary files in chfn and chsh when compiled with libreadline"
+              },
+              "fullDescription": {
+                "text": "A flaw was found in the util-linux chfn and chsh utilities when compiled with Readline support. The Readline library uses an \u0026#34;INPUTRC\u0026#34; environment variable to get a path to the library config file. When the library cannot parse the specified file, it prints an error message containing data from the file. This flaw allows an unprivileged user to read root-owned files, potentially leading to privilege escalation. This flaw affects util-linux versions prior to 2.37.4."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2022-0563",
+              "help": {
+                "text": "Vulnerability CVE-2022-0563\nSeverity: MEDIUM\nPackage: libuuid\nFixed Version: 2.37.4-r0\nLink: [CVE-2022-0563](https://avd.aquasec.com/nvd/cve-2022-0563)\nA flaw was found in the util-linux chfn and chsh utilities when compiled with Readline support. The Readline library uses an \"INPUTRC\" environment variable to get a path to the library config file. When the library cannot parse the specified file, it prints an error message containing data from the file. This flaw allows an unprivileged user to read root-owned files, potentially leading to privilege escalation. This flaw affects util-linux versions prior to 2.37.4.",
+                "markdown": "**Vulnerability CVE-2022-0563**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|libuuid|2.37.4-r0|[CVE-2022-0563](https://avd.aquasec.com/nvd/cve-2022-0563)|\n\nA flaw was found in the util-linux chfn and chsh utilities when compiled with Readline support. The Readline library uses an \"INPUTRC\" environment variable to get a path to the library config file. When the library cannot parse the specified file, it prints an error message containing data from the file. This flaw allows an unprivileged user to read root-owned files, potentially leading to privilege escalation. This flaw affects util-linux versions prior to 2.37.4."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2022-29458",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "ncurses: segfaulting OOB read"
+              },
+              "fullDescription": {
+                "text": "ncurses 6.3 before patch 20220416 has an out-of-bounds read and segmentation violation in convert_strings in tinfo/read_entry.c in the terminfo library."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2022-29458",
+              "help": {
+                "text": "Vulnerability CVE-2022-29458\nSeverity: HIGH\nPackage: ncurses-terminfo-base\nFixed Version: 6.2_p20210612-r1\nLink: [CVE-2022-29458](https://avd.aquasec.com/nvd/cve-2022-29458)\nncurses 6.3 before patch 20220416 has an out-of-bounds read and segmentation violation in convert_strings in tinfo/read_entry.c in the terminfo library.",
+                "markdown": "**Vulnerability CVE-2022-29458**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|ncurses-terminfo-base|6.2_p20210612-r1|[CVE-2022-29458](https://avd.aquasec.com/nvd/cve-2022-29458)|\n\nncurses 6.3 before patch 20220416 has an out-of-bounds read and segmentation violation in convert_strings in tinfo/read_entry.c in the terminfo library."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "7.1",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2022-1271",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "gzip: arbitrary-file-write vulnerability"
+              },
+              "fullDescription": {
+                "text": "An arbitrary file write vulnerability was found in GNU gzip\u0026#39;s zgrep utility. When zgrep is applied on the attacker\u0026#39;s chosen file name (for example, a crafted file name), this can overwrite an attacker\u0026#39;s content to an arbitrary attacker-selected file. This flaw occurs due to insufficient validation when processing filenames with two or more newlines where selected content and the target file names are embedded in crafted multi-line file names. This flaw allows a remote, low privileged attacker to force zgrep to write arbitrary files on the system."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2022-1271",
+              "help": {
+                "text": "Vulnerability CVE-2022-1271\nSeverity: HIGH\nPackage: xz-libs\nFixed Version: 5.2.5-r1\nLink: [CVE-2022-1271](https://avd.aquasec.com/nvd/cve-2022-1271)\nAn arbitrary file write vulnerability was found in GNU gzip's zgrep utility. When zgrep is applied on the attacker's chosen file name (for example, a crafted file name), this can overwrite an attacker's content to an arbitrary attacker-selected file. This flaw occurs due to insufficient validation when processing filenames with two or more newlines where selected content and the target file names are embedded in crafted multi-line file names. This flaw allows a remote, low privileged attacker to force zgrep to write arbitrary files on the system.",
+                "markdown": "**Vulnerability CVE-2022-1271**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|xz-libs|5.2.5-r1|[CVE-2022-1271](https://avd.aquasec.com/nvd/cve-2022-1271)|\n\nAn arbitrary file write vulnerability was found in GNU gzip's zgrep utility. When zgrep is applied on the attacker's chosen file name (for example, a crafted file name), this can overwrite an attacker's content to an arbitrary attacker-selected file. This flaw occurs due to insufficient validation when processing filenames with two or more newlines where selected content and the target file names are embedded in crafted multi-line file names. This flaw allows a remote, low privileged attacker to force zgrep to write arbitrary files on the system."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.8",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2022-37434",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "zlib: heap-based buffer over-read and overflow in inflate() in inflate.c via a large gzip header extra field"
+              },
+              "fullDescription": {
+                "text": "zlib through 1.2.12 has a heap-based buffer over-read or buffer overflow in inflate in inflate.c via a large gzip header extra field. NOTE: only applications that call inflateGetHeader are affected. Some common applications bundle the affected zlib source code but may be unable to call inflateGetHeader (e.g., see the nodejs/node reference)."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2022-37434",
+              "help": {
+                "text": "Vulnerability CVE-2022-37434\nSeverity: CRITICAL\nPackage: zlib\nFixed Version: 1.2.12-r2\nLink: [CVE-2022-37434](https://avd.aquasec.com/nvd/cve-2022-37434)\nzlib through 1.2.12 has a heap-based buffer over-read or buffer overflow in inflate in inflate.c via a large gzip header extra field. NOTE: only applications that call inflateGetHeader are affected. Some common applications bundle the affected zlib source code but may be unable to call inflateGetHeader (e.g., see the nodejs/node reference).",
+                "markdown": "**Vulnerability CVE-2022-37434**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|CRITICAL|zlib|1.2.12-r2|[CVE-2022-37434](https://avd.aquasec.com/nvd/cve-2022-37434)|\n\nzlib through 1.2.12 has a heap-based buffer over-read or buffer overflow in inflate in inflate.c via a large gzip header extra field. NOTE: only applications that call inflateGetHeader are affected. Some common applications bundle the affected zlib source code but may be unable to call inflateGetHeader (e.g., see the nodejs/node reference)."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "9.8",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "CRITICAL"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2018-25032",
+              "name": "OsPackageVulnerability",
+              "shortDescription": {
+                "text": "zlib: A flaw found in zlib when compressing (not decompressing) certain inputs"
+              },
+              "fullDescription": {
+                "text": "zlib before 1.2.12 allows memory corruption when deflating (i.e., when compressing) if the input has many distant matches."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2018-25032",
+              "help": {
+                "text": "Vulnerability CVE-2018-25032\nSeverity: HIGH\nPackage: zlib\nFixed Version: 1.2.12-r0\nLink: [CVE-2018-25032](https://avd.aquasec.com/nvd/cve-2018-25032)\nzlib before 1.2.12 allows memory corruption when deflating (i.e., when compressing) if the input has many distant matches.",
+                "markdown": "**Vulnerability CVE-2018-25032**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|zlib|1.2.12-r0|[CVE-2018-25032](https://avd.aquasec.com/nvd/cve-2018-25032)|\n\nzlib before 1.2.12 allows memory corruption when deflating (i.e., when compressing) if the input has many distant matches."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2022-29217",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "python-jwt: Key confusion through non-blocklisted public key formats"
+              },
+              "fullDescription": {
+                "text": "PyJWT is a Python implementation of RFC 7519. PyJWT supports multiple different JWT signing algorithms. With JWT, an attacker submitting the JWT token can choose the used signing algorithm. The PyJWT library requires that the application chooses what algorithms are supported. The application can specify `jwt.algorithms.get_default_algorithms()` to get support for all algorithms, or specify a single algorithm. The issue is not that big as `algorithms=jwt.algorithms.get_default_algorithms()` has to be used. Users should upgrade to v2.4.0 to receive a patch for this issue. As a workaround, always be explicit with the algorithms that are accepted and expected when decoding."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2022-29217",
+              "help": {
+                "text": "Vulnerability CVE-2022-29217\nSeverity: HIGH\nPackage: PyJWT\nFixed Version: 2.4.0\nLink: [CVE-2022-29217](https://avd.aquasec.com/nvd/cve-2022-29217)\nPyJWT is a Python implementation of RFC 7519. PyJWT supports multiple different JWT signing algorithms. With JWT, an attacker submitting the JWT token can choose the used signing algorithm. The PyJWT library requires that the application chooses what algorithms are supported. The application can specify `jwt.algorithms.get_default_algorithms()` to get support for all algorithms, or specify a single algorithm. The issue is not that big as `algorithms=jwt.algorithms.get_default_algorithms()` has to be used. Users should upgrade to v2.4.0 to receive a patch for this issue. As a workaround, always be explicit with the algorithms that are accepted and expected when decoding.",
+                "markdown": "**Vulnerability CVE-2022-29217**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|PyJWT|2.4.0|[CVE-2022-29217](https://avd.aquasec.com/nvd/cve-2022-29217)|\n\nPyJWT is a Python implementation of RFC 7519. PyJWT supports multiple different JWT signing algorithms. With JWT, an attacker submitting the JWT token can choose the used signing algorithm. The PyJWT library requires that the application chooses what algorithms are supported. The application can specify `jwt.algorithms.get_default_algorithms()` to get support for all algorithms, or specify a single algorithm. The issue is not that big as `algorithms=jwt.algorithms.get_default_algorithms()` has to be used. Users should upgrade to v2.4.0 to receive a patch for this issue. As a workaround, always be explicit with the algorithms that are accepted and expected when decoding."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2023-23931",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Cipher.update_into can corrupt memory if passed an immutable python object as the outbuf"
+              },
+              "fullDescription": {
+                "text": "cryptography is a package designed to expose cryptographic primitives and recipes to Python developers. In affected versions `Cipher.update_into` would accept Python objects which implement the buffer protocol, but provide only immutable buffers. This would allow immutable objects (such as `bytes`) to be mutated, thus violating fundamental rules of Python and resulting in corrupted output. This now correctly raises an exception. This issue has been present since `update_into` was originally introduced in cryptography 1.8."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2023-23931",
+              "help": {
+                "text": "Vulnerability CVE-2023-23931\nSeverity: MEDIUM\nPackage: cryptography\nFixed Version: 39.0.1\nLink: [CVE-2023-23931](https://avd.aquasec.com/nvd/cve-2023-23931)\ncryptography is a package designed to expose cryptographic primitives and recipes to Python developers. In affected versions `Cipher.update_into` would accept Python objects which implement the buffer protocol, but provide only immutable buffers. This would allow immutable objects (such as `bytes`) to be mutated, thus violating fundamental rules of Python and resulting in corrupted output. This now correctly raises an exception. This issue has been present since `update_into` was originally introduced in cryptography 1.8.",
+                "markdown": "**Vulnerability CVE-2023-23931**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|cryptography|39.0.1|[CVE-2023-23931](https://avd.aquasec.com/nvd/cve-2023-23931)|\n\ncryptography is a package designed to expose cryptographic primitives and recipes to Python developers. In affected versions `Cipher.update_into` would accept Python objects which implement the buffer protocol, but provide only immutable buffers. This would allow immutable objects (such as `bytes`) to be mutated, thus violating fundamental rules of Python and resulting in corrupted output. This now correctly raises an exception. This issue has been present since `update_into` was originally introduced in cryptography 1.8."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2022-40897",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "pypa-setuptools: Regular Expression Denial of Service (ReDoS) in package_index.py"
+              },
+              "fullDescription": {
+                "text": "Python Packaging Authority (PyPA) setuptools before 65.5.1 allows remote attackers to cause a denial of service via HTML in a crafted package or custom PackageIndex page. There is a Regular Expression Denial of Service (ReDoS) in package_index.py."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2022-40897",
+              "help": {
+                "text": "Vulnerability CVE-2022-40897\nSeverity: HIGH\nPackage: setuptools\nFixed Version: 65.5.1\nLink: [CVE-2022-40897](https://avd.aquasec.com/nvd/cve-2022-40897)\nPython Packaging Authority (PyPA) setuptools before 65.5.1 allows remote attackers to cause a denial of service via HTML in a crafted package or custom PackageIndex page. There is a Regular Expression Denial of Service (ReDoS) in package_index.py.",
+                "markdown": "**Vulnerability CVE-2022-40897**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|setuptools|65.5.1|[CVE-2022-40897](https://avd.aquasec.com/nvd/cve-2022-40897)|\n\nPython Packaging Authority (PyPA) setuptools before 65.5.1 allows remote attackers to cause a denial of service via HTML in a crafted package or custom PackageIndex page. There is a Regular Expression Denial of Service (ReDoS) in package_index.py."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2022-40898",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "python-wheel: remote attackers can cause  denial of service via attacker controlled input to wheel cli"
+              },
+              "fullDescription": {
+                "text": "An issue discovered in Python Packaging Authority (PyPA) Wheel 0.37.1 and earlier allows remote attackers to cause a denial of service via attacker controlled input to wheel cli."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2022-40898",
+              "help": {
+                "text": "Vulnerability CVE-2022-40898\nSeverity: HIGH\nPackage: wheel\nFixed Version: 0.38.1\nLink: [CVE-2022-40898](https://avd.aquasec.com/nvd/cve-2022-40898)\nAn issue discovered in Python Packaging Authority (PyPA) Wheel 0.37.1 and earlier allows remote attackers to cause a denial of service via attacker controlled input to wheel cli.",
+                "markdown": "**Vulnerability CVE-2022-40898**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|wheel|0.38.1|[CVE-2022-40898](https://avd.aquasec.com/nvd/cve-2022-40898)|\n\nAn issue discovered in Python Packaging Authority (PyPA) Wheel 0.37.1 and earlier allows remote attackers to cause a denial of service via attacker controlled input to wheel cli."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            }
+          ],
+          "version": "0.37.1"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CVE-2022-28391",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Package: busybox\nInstalled Version: 1.33.1-r6\nVulnerability CVE-2022-28391\nSeverity: HIGH\nFixed Version: 1.33.1-r7\nLink: [CVE-2022-28391](https://avd.aquasec.com/nvd/cve-2022-28391)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: busybox@1.33.1-r6"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-23852",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "Package: expat\nInstalled Version: 2.4.3-r0\nVulnerability CVE-2022-23852\nSeverity: CRITICAL\nFixed Version: 2.4.4-r0\nLink: [CVE-2022-23852](https://avd.aquasec.com/nvd/cve-2022-23852)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: expat@2.4.3-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-25235",
+          "ruleIndex": 2,
+          "level": "error",
+          "message": {
+            "text": "Package: expat\nInstalled Version: 2.4.3-r0\nVulnerability CVE-2022-25235\nSeverity: CRITICAL\nFixed Version: 2.4.5-r0\nLink: [CVE-2022-25235](https://avd.aquasec.com/nvd/cve-2022-25235)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: expat@2.4.3-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-25236",
+          "ruleIndex": 3,
+          "level": "error",
+          "message": {
+            "text": "Package: expat\nInstalled Version: 2.4.3-r0\nVulnerability CVE-2022-25236\nSeverity: CRITICAL\nFixed Version: 2.4.5-r0\nLink: [CVE-2022-25236](https://avd.aquasec.com/nvd/cve-2022-25236)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: expat@2.4.3-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-25315",
+          "ruleIndex": 4,
+          "level": "error",
+          "message": {
+            "text": "Package: expat\nInstalled Version: 2.4.3-r0\nVulnerability CVE-2022-25315\nSeverity: CRITICAL\nFixed Version: 2.4.5-r0\nLink: [CVE-2022-25315](https://avd.aquasec.com/nvd/cve-2022-25315)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: expat@2.4.3-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-23990",
+          "ruleIndex": 5,
+          "level": "error",
+          "message": {
+            "text": "Package: expat\nInstalled Version: 2.4.3-r0\nVulnerability CVE-2022-23990\nSeverity: HIGH\nFixed Version: 2.4.4-r0\nLink: [CVE-2022-23990](https://avd.aquasec.com/nvd/cve-2022-23990)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: expat@2.4.3-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-25314",
+          "ruleIndex": 6,
+          "level": "error",
+          "message": {
+            "text": "Package: expat\nInstalled Version: 2.4.3-r0\nVulnerability CVE-2022-25314\nSeverity: HIGH\nFixed Version: 2.4.5-r0\nLink: [CVE-2022-25314](https://avd.aquasec.com/nvd/cve-2022-25314)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: expat@2.4.3-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-40674",
+          "ruleIndex": 7,
+          "level": "error",
+          "message": {
+            "text": "Package: expat\nInstalled Version: 2.4.3-r0\nVulnerability CVE-2022-40674\nSeverity: HIGH\nFixed Version: 2.4.9-r0\nLink: [CVE-2022-40674](https://avd.aquasec.com/nvd/cve-2022-40674)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: expat@2.4.3-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-43680",
+          "ruleIndex": 8,
+          "level": "error",
+          "message": {
+            "text": "Package: expat\nInstalled Version: 2.4.3-r0\nVulnerability CVE-2022-43680\nSeverity: HIGH\nFixed Version: 2.5.0-r0\nLink: [CVE-2022-43680](https://avd.aquasec.com/nvd/cve-2022-43680)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: expat@2.4.3-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-25313",
+          "ruleIndex": 9,
+          "level": "warning",
+          "message": {
+            "text": "Package: expat\nInstalled Version: 2.4.3-r0\nVulnerability CVE-2022-25313\nSeverity: MEDIUM\nFixed Version: 2.4.5-r0\nLink: [CVE-2022-25313](https://avd.aquasec.com/nvd/cve-2022-25313)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: expat@2.4.3-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2021-37750",
+          "ruleIndex": 10,
+          "level": "warning",
+          "message": {
+            "text": "Package: krb5-libs\nInstalled Version: 1.18.4-r0\nVulnerability CVE-2021-37750\nSeverity: MEDIUM\nFixed Version: 1.18.5-r0\nLink: [CVE-2021-37750](https://avd.aquasec.com/nvd/cve-2021-37750)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: krb5-libs@1.18.4-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-0778",
+          "ruleIndex": 11,
+          "level": "error",
+          "message": {
+            "text": "Package: libcrypto1.1\nInstalled Version: 1.1.1l-r0\nVulnerability CVE-2022-0778\nSeverity: HIGH\nFixed Version: 1.1.1n-r0\nLink: [CVE-2022-0778](https://avd.aquasec.com/nvd/cve-2022-0778)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: libcrypto1.1@1.1.1l-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2023-0286",
+          "ruleIndex": 12,
+          "level": "error",
+          "message": {
+            "text": "Package: libcrypto1.1\nInstalled Version: 1.1.1l-r0\nVulnerability CVE-2023-0286\nSeverity: HIGH\nFixed Version: 1.1.1t-r0\nLink: [CVE-2023-0286](https://avd.aquasec.com/nvd/cve-2023-0286)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: libcrypto1.1@1.1.1l-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-2097",
+          "ruleIndex": 13,
+          "level": "warning",
+          "message": {
+            "text": "Package: libcrypto1.1\nInstalled Version: 1.1.1l-r0\nVulnerability CVE-2022-2097\nSeverity: MEDIUM\nFixed Version: 1.1.1q-r0\nLink: [CVE-2022-2097](https://avd.aquasec.com/nvd/cve-2022-2097)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: libcrypto1.1@1.1.1l-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-4304",
+          "ruleIndex": 14,
+          "level": "warning",
+          "message": {
+            "text": "Package: libcrypto1.1\nInstalled Version: 1.1.1l-r0\nVulnerability CVE-2022-4304\nSeverity: MEDIUM\nFixed Version: 1.1.1t-r0\nLink: [CVE-2022-4304](https://avd.aquasec.com/nvd/cve-2022-4304)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: libcrypto1.1@1.1.1l-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-4450",
+          "ruleIndex": 15,
+          "level": "warning",
+          "message": {
+            "text": "Package: libcrypto1.1\nInstalled Version: 1.1.1l-r0\nVulnerability CVE-2022-4450\nSeverity: MEDIUM\nFixed Version: 1.1.1t-r0\nLink: [CVE-2022-4450](https://avd.aquasec.com/nvd/cve-2022-4450)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: libcrypto1.1@1.1.1l-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2023-0215",
+          "ruleIndex": 16,
+          "level": "warning",
+          "message": {
+            "text": "Package: libcrypto1.1\nInstalled Version: 1.1.1l-r0\nVulnerability CVE-2023-0215\nSeverity: MEDIUM\nFixed Version: 1.1.1t-r0\nLink: [CVE-2023-0215](https://avd.aquasec.com/nvd/cve-2023-0215)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: libcrypto1.1@1.1.1l-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-1552",
+          "ruleIndex": 17,
+          "level": "error",
+          "message": {
+            "text": "Package: libpq\nInstalled Version: 13.5-r0\nVulnerability CVE-2022-1552\nSeverity: HIGH\nFixed Version: 13.7-r0\nLink: [CVE-2022-1552](https://avd.aquasec.com/nvd/cve-2022-1552)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: libpq@13.5-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-2625",
+          "ruleIndex": 18,
+          "level": "error",
+          "message": {
+            "text": "Package: libpq\nInstalled Version: 13.5-r0\nVulnerability CVE-2022-2625\nSeverity: HIGH\nFixed Version: 13.8-r0\nLink: [CVE-2022-2625](https://avd.aquasec.com/nvd/cve-2022-2625)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: libpq@13.5-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-0778",
+          "ruleIndex": 11,
+          "level": "error",
+          "message": {
+            "text": "Package: libretls\nInstalled Version: 3.3.3p1-r2\nVulnerability CVE-2022-0778\nSeverity: HIGH\nFixed Version: 3.3.3p1-r3\nLink: [CVE-2022-0778](https://avd.aquasec.com/nvd/cve-2022-0778)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: libretls@3.3.3p1-r2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-24407",
+          "ruleIndex": 19,
+          "level": "error",
+          "message": {
+            "text": "Package: libsasl\nInstalled Version: 2.1.27-r12\nVulnerability CVE-2022-24407\nSeverity: HIGH\nFixed Version: 2.1.28-r0\nLink: [CVE-2022-24407](https://avd.aquasec.com/nvd/cve-2022-24407)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: libsasl@2.1.27-r12"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-0778",
+          "ruleIndex": 11,
+          "level": "error",
+          "message": {
+            "text": "Package: libssl1.1\nInstalled Version: 1.1.1l-r0\nVulnerability CVE-2022-0778\nSeverity: HIGH\nFixed Version: 1.1.1n-r0\nLink: [CVE-2022-0778](https://avd.aquasec.com/nvd/cve-2022-0778)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: libssl1.1@1.1.1l-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2023-0286",
+          "ruleIndex": 12,
+          "level": "error",
+          "message": {
+            "text": "Package: libssl1.1\nInstalled Version: 1.1.1l-r0\nVulnerability CVE-2023-0286\nSeverity: HIGH\nFixed Version: 1.1.1t-r0\nLink: [CVE-2023-0286](https://avd.aquasec.com/nvd/cve-2023-0286)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: libssl1.1@1.1.1l-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-2097",
+          "ruleIndex": 13,
+          "level": "warning",
+          "message": {
+            "text": "Package: libssl1.1\nInstalled Version: 1.1.1l-r0\nVulnerability CVE-2022-2097\nSeverity: MEDIUM\nFixed Version: 1.1.1q-r0\nLink: [CVE-2022-2097](https://avd.aquasec.com/nvd/cve-2022-2097)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: libssl1.1@1.1.1l-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-4304",
+          "ruleIndex": 14,
+          "level": "warning",
+          "message": {
+            "text": "Package: libssl1.1\nInstalled Version: 1.1.1l-r0\nVulnerability CVE-2022-4304\nSeverity: MEDIUM\nFixed Version: 1.1.1t-r0\nLink: [CVE-2022-4304](https://avd.aquasec.com/nvd/cve-2022-4304)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: libssl1.1@1.1.1l-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-4450",
+          "ruleIndex": 15,
+          "level": "warning",
+          "message": {
+            "text": "Package: libssl1.1\nInstalled Version: 1.1.1l-r0\nVulnerability CVE-2022-4450\nSeverity: MEDIUM\nFixed Version: 1.1.1t-r0\nLink: [CVE-2022-4450](https://avd.aquasec.com/nvd/cve-2022-4450)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: libssl1.1@1.1.1l-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2023-0215",
+          "ruleIndex": 16,
+          "level": "warning",
+          "message": {
+            "text": "Package: libssl1.1\nInstalled Version: 1.1.1l-r0\nVulnerability CVE-2023-0215\nSeverity: MEDIUM\nFixed Version: 1.1.1t-r0\nLink: [CVE-2023-0215](https://avd.aquasec.com/nvd/cve-2023-0215)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: libssl1.1@1.1.1l-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2021-46828",
+          "ruleIndex": 20,
+          "level": "error",
+          "message": {
+            "text": "Package: libtirpc\nInstalled Version: 1.3.2-r0\nVulnerability CVE-2021-46828\nSeverity: HIGH\nFixed Version: 1.3.2-r1\nLink: [CVE-2021-46828](https://avd.aquasec.com/nvd/cve-2021-46828)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: libtirpc@1.3.2-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2021-46828",
+          "ruleIndex": 20,
+          "level": "error",
+          "message": {
+            "text": "Package: libtirpc-conf\nInstalled Version: 1.3.2-r0\nVulnerability CVE-2021-46828\nSeverity: HIGH\nFixed Version: 1.3.2-r1\nLink: [CVE-2021-46828](https://avd.aquasec.com/nvd/cve-2021-46828)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: libtirpc-conf@1.3.2-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2021-3995",
+          "ruleIndex": 21,
+          "level": "warning",
+          "message": {
+            "text": "Package: libuuid\nInstalled Version: 2.37.2-r0\nVulnerability CVE-2021-3995\nSeverity: MEDIUM\nFixed Version: 2.37.3-r0\nLink: [CVE-2021-3995](https://avd.aquasec.com/nvd/cve-2021-3995)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: libuuid@2.37.2-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2021-3996",
+          "ruleIndex": 22,
+          "level": "warning",
+          "message": {
+            "text": "Package: libuuid\nInstalled Version: 2.37.2-r0\nVulnerability CVE-2021-3996\nSeverity: MEDIUM\nFixed Version: 2.37.3-r0\nLink: [CVE-2021-3996](https://avd.aquasec.com/nvd/cve-2021-3996)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: libuuid@2.37.2-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-0563",
+          "ruleIndex": 23,
+          "level": "warning",
+          "message": {
+            "text": "Package: libuuid\nInstalled Version: 2.37.2-r0\nVulnerability CVE-2022-0563\nSeverity: MEDIUM\nFixed Version: 2.37.4-r0\nLink: [CVE-2022-0563](https://avd.aquasec.com/nvd/cve-2022-0563)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: libuuid@2.37.2-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-29458",
+          "ruleIndex": 24,
+          "level": "error",
+          "message": {
+            "text": "Package: ncurses-libs\nInstalled Version: 6.2_p20210612-r0\nVulnerability CVE-2022-29458\nSeverity: HIGH\nFixed Version: 6.2_p20210612-r1\nLink: [CVE-2022-29458](https://avd.aquasec.com/nvd/cve-2022-29458)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: ncurses-libs@6.2_p20210612-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-29458",
+          "ruleIndex": 24,
+          "level": "error",
+          "message": {
+            "text": "Package: ncurses-terminfo-base\nInstalled Version: 6.2_p20210612-r0\nVulnerability CVE-2022-29458\nSeverity: HIGH\nFixed Version: 6.2_p20210612-r1\nLink: [CVE-2022-29458](https://avd.aquasec.com/nvd/cve-2022-29458)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: ncurses-terminfo-base@6.2_p20210612-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-28391",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Package: ssl_client\nInstalled Version: 1.33.1-r6\nVulnerability CVE-2022-28391\nSeverity: HIGH\nFixed Version: 1.33.1-r7\nLink: [CVE-2022-28391](https://avd.aquasec.com/nvd/cve-2022-28391)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: ssl_client@1.33.1-r6"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-1271",
+          "ruleIndex": 25,
+          "level": "error",
+          "message": {
+            "text": "Package: xz-libs\nInstalled Version: 5.2.5-r0\nVulnerability CVE-2022-1271\nSeverity: HIGH\nFixed Version: 5.2.5-r1\nLink: [CVE-2022-1271](https://avd.aquasec.com/nvd/cve-2022-1271)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: xz-libs@5.2.5-r0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-37434",
+          "ruleIndex": 26,
+          "level": "error",
+          "message": {
+            "text": "Package: zlib\nInstalled Version: 1.2.11-r3\nVulnerability CVE-2022-37434\nSeverity: CRITICAL\nFixed Version: 1.2.12-r2\nLink: [CVE-2022-37434](https://avd.aquasec.com/nvd/cve-2022-37434)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: zlib@1.2.11-r3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2018-25032",
+          "ruleIndex": 27,
+          "level": "error",
+          "message": {
+            "text": "Package: zlib\nInstalled Version: 1.2.11-r3\nVulnerability CVE-2018-25032\nSeverity: HIGH\nFixed Version: 1.2.12-r0\nLink: [CVE-2018-25032](https://avd.aquasec.com/nvd/cve-2018-25032)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ortelius/ms-dep-pkg-cud",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "ortelius/ms-dep-pkg-cud: zlib@1.2.11-r3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-29217",
+          "ruleIndex": 28,
+          "level": "error",
+          "message": {
+            "text": "Package: PyJWT\nInstalled Version: 2.0.1\nVulnerability CVE-2022-29217\nSeverity: HIGH\nFixed Version: 2.4.0\nLink: [CVE-2022-29217](https://avd.aquasec.com/nvd/cve-2022-29217)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "usr/local/lib/python3.9/site-packages/PyJWT-2.0.1.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "usr/local/lib/python3.9/site-packages/PyJWT-2.0.1.dist-info/METADATA: PyJWT@2.0.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2023-23931",
+          "ruleIndex": 29,
+          "level": "warning",
+          "message": {
+            "text": "Package: cryptography\nInstalled Version: 3.4.8\nVulnerability CVE-2023-23931\nSeverity: MEDIUM\nFixed Version: 39.0.1\nLink: [CVE-2023-23931](https://avd.aquasec.com/nvd/cve-2023-23931)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "usr/local/lib/python3.9/site-packages/cryptography-3.4.8.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "usr/local/lib/python3.9/site-packages/cryptography-3.4.8.dist-info/METADATA: cryptography@3.4.8"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-40897",
+          "ruleIndex": 30,
+          "level": "error",
+          "message": {
+            "text": "Package: setuptools\nInstalled Version: 57.5.0\nVulnerability CVE-2022-40897\nSeverity: HIGH\nFixed Version: 65.5.1\nLink: [CVE-2022-40897](https://avd.aquasec.com/nvd/cve-2022-40897)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "usr/local/lib/python3.9/site-packages/setuptools-57.5.0.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "usr/local/lib/python3.9/site-packages/setuptools-57.5.0.dist-info/METADATA: setuptools@57.5.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-40898",
+          "ruleIndex": 31,
+          "level": "error",
+          "message": {
+            "text": "Package: wheel\nInstalled Version: 0.37.0\nVulnerability CVE-2022-40898\nSeverity: HIGH\nFixed Version: 0.38.1\nLink: [CVE-2022-40898](https://avd.aquasec.com/nvd/cve-2022-40898)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "usr/local/lib/python3.9/site-packages/wheel-0.37.0.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "usr/local/lib/python3.9/site-packages/wheel-0.37.0.dist-info/METADATA: wheel@0.37.0"
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "originalUriBaseIds": {
+        "ROOTPATH": {
+          "uri": "file:///"
+        }
+      }
+    }
+  ]
+}
