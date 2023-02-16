@@ -5,7 +5,8 @@ on:
     branches:
       - main
     paths-ignore:
-      - "chart/**"
+      - "chart/ms-dep-pkg-cud/Chart.yaml"
+      - "chart/ms-dep-pkg-cud/values.yaml"
 jobs:
   release:
     runs-on: ubuntu-latest
