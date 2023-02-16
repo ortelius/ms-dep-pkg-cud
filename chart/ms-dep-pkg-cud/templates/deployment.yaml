@@ -62,11 +62,11 @@ spec:
                   key: DBName
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8080
           livenessProbe:
             httpGet:
               path: /health
-              port: 80
+              port: 8080
             initialDelaySeconds: 60
             periodSeconds: 60
 ---
