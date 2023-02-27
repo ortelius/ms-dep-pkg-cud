@@ -34,3 +34,7 @@ methods:
   ```
   curl -X DELETE localhost:5000/msapi/compitem?comp_id=1
   ```
+
+## Fixed CVEs
+
+- 2/27/23 - [CVE-2023-25139](https://www.openwall.com/lists/oss-security/2023/02/10/1)
