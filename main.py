@@ -230,12 +230,12 @@ def saveComponentsData(response, compid, bomformat, components_data):
                     # delete old licenses
                     sqlstmt = 'DELETE from dm_componentdeps where compid=%s and deptype=%s'
                     params = (compid, bomformat,)
-                    cursor.execute(sql.text(sqlstmt), params)
+                    cursor.execute(sqlstmt, params)
 
                     # insert into database
                     sqlstmt = 'INSERT INTO dm_componentdeps(compid, packagename, packageversion, deptype, name, url, summary, purl, pkgtype) VALUES {}'.format(records_list_template)
 
-                    cursor.execute(sql.text(sqlstmt), components_data)
+                    cursor.execute(sqlstmt, components_data)
 
                     rows_inserted = cursor.rowcount
                     # Commit the changes to the database
