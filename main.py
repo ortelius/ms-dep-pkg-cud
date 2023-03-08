@@ -23,7 +23,7 @@ import requests
 import uvicorn
 from fastapi import Body, FastAPI, HTTPException, Request, Response, status
 from pydantic import BaseModel
-from sqlalchemy import create_engine
+from sqlalchemy import sql, create_engine
 from sqlalchemy.exc import OperationalError, StatementError, InterfaceError
 # Init Globals
 service_name = 'ortelius-ms-dep-pkg-cud'
@@ -228,14 +228,14 @@ def saveComponentsData(response, compid, bomformat, components_data):
                     records_list_template = ','.join(['%s'] * len(components_data))
 
                     # delete old licenses
-                    sql = 'DELETE from dm_componentdeps where compid=%s and deptype=%s'
+                    sqlstmt = 'DELETE from dm_componentdeps where compid=%s and deptype=%s'
                     params = (compid, bomformat,)
-                    cursor.execute(sql, params)
+                    cursor.execute(sqlstmt, params)
 
                     # insert into database
-                    sql = 'INSERT INTO dm_componentdeps(compid, packagename, packageversion, deptype, name, url, summary, purl, pkgtype) VALUES {}'.format(records_list_template)
+                    sqlstmt = 'INSERT INTO dm_componentdeps(compid, packagename, packageversion, deptype, name, url, summary, purl, pkgtype) VALUES {}'.format(records_list_template)
 
-                    cursor.execute(sql, components_data)
+                    cursor.execute(sqlstmt, components_data)
 
                     rows_inserted = cursor.rowcount
                     # Commit the changes to the database

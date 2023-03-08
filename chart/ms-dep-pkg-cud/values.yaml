@@ -1,6 +1,6 @@
 replicaCount: 1
 image:
   repository: quay.io/ortelius/ms-dep-pkg-cud
-  tag: main-v10.0.10-g7f07c5
-  sha: sha256:578f2ef0bc93c685d8e2b8fa897d6672c400ea24c0f143c01d4e82ce52bc45db
+  tag: main-v10.0.16-g358381
+  sha: sha256:3e365d7f7fed3985c4640edf4caf3ed78e2f0932bac6fc3d1b0fda22ad5d1ff6
   pullPolicy: Always
