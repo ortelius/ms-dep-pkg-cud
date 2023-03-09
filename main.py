@@ -67,14 +67,14 @@ async def health(response: Response) -> StatusMsg:
             cursor = conn.cursor()
             cursor.execute("SELECT 1")
             if cursor.rowcount > 0:
-                return {"status": "UP", "service_name": service_name}
+                return StatusMsg(status="UP", service_name=service_name)
             response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
-            return {"status": "DOWN"}
+            return StatusMsg(status="DOWN", service_name=service_name)
 
     except Exception as err:
         print(str(err))
         response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
-        return {"status": "DOWN"}
+        return StatusMsg(status="DOWN", service_name=service_name)
 
 
 # end health check
