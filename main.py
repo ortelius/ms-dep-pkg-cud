@@ -91,7 +91,6 @@ def example(filename):
 
 @app.post("/msapi/deppkg/cyclonedx")
 async def cyclonedx(request: Request, response: Response, compid: int, cyclonedx_json: dict = Body(..., example=example("cyclonedx.json"), description="JSON output from running CycloneDX")):
-    print(json.dumps(cyclonedx_json))
     components_data = []
     components = cyclonedx_json.get("components", [])
 
@@ -115,6 +114,8 @@ async def cyclonedx(request: Request, response: Response, compid: int, cyclonedx
                 license_name = license.get("id")
             elif license.get("name", None) is not None:
                 license_name = license.get("name")
+                if "," in license_name:
+                    license_name = license_name.split(",")[0]
 
             if len(license_name) > 0:
                 license_url = "https://spdx.org/licenses/" + license_name + ".html"
@@ -163,6 +164,10 @@ async def spdx(request: Request, response: Response, compid: int, spdx_json: dic
         if license != "NOASSERTION":
             license_name = license
             license_url = "https://spdx.org/licenses/" + license_name + ".html"
+
+        if "," in license_name:
+            license_name = license_name.split(",")[0]
+
         component_data = (compid, packagename, packageversion, bomformat, license_name, license_url, summary, purl, pkgtype)
         components_data.append(component_data)
 
