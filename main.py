@@ -91,7 +91,7 @@ def example(filename):
 
 @app.post("/msapi/deppkg/cyclonedx")
 async def cyclonedx(request: Request, response: Response, compid: int, cyclonedx_json: dict = Body(..., example=example("cyclonedx.json"), description="JSON output from running CycloneDX")):
-    json.dumps(cyclonedx_json)
+    print(json.dumps(cyclonedx_json))
     components_data = []
     components = cyclonedx_json.get("components", [])
 
