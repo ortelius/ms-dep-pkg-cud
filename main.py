@@ -89,10 +89,6 @@ def example(filename):
     return text
 
 
-class Message(BaseModel):
-    detail: str
-
-
 @app.post("/msapi/deppkg/cyclonedx")
 async def cyclonedx(request: Request, response: Response, compid: int, cyclonedx_json: dict = Body(..., example=example("cyclonedx.json"), description="JSON output from running CycloneDX")):
     json.dumps(cyclonedx_json)
