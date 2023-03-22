@@ -22,9 +22,9 @@ from typing import Optional
 import requests
 import uvicorn
 from fastapi import Body, FastAPI, HTTPException, Request, Response, status
-from pydantic import BaseModel
-from sqlalchemy import sql, create_engine
-from sqlalchemy.exc import OperationalError, StatementError, InterfaceError
+from pydantic import BaseModel  # pylint: disable=E0611
+from sqlalchemy import create_engine, sql
+from sqlalchemy.exc import InterfaceError, OperationalError, StatementError
 
 # Init Globals
 service_name = "ortelius-ms-dep-pkg-cud"
@@ -40,12 +40,12 @@ db_name = os.getenv("DB_NAME", "postgres")
 db_user = os.getenv("DB_USER", "postgres")
 db_pass = os.getenv("DB_PASS", "postgres")
 db_port = os.getenv("DB_PORT", "5432")
-validateuser_url = os.getenv("VALIDATEUSER_URL", None)
+validateuser_url = os.getenv("VALIDATEUSER_URL", "")
 
-if validateuser_url is None:
+if len(validateuser_url) == 0:
     validateuser_host = os.getenv("MS_VALIDATE_USER_SERVICE_HOST", "127.0.0.1")
     host = socket.gethostbyaddr(validateuser_host)[0]
-    validateuser_url = "http://" + host + ":" + str(os.getenv("MS_VALIDATE_USER_SERVICE_PORT", 80))
+    validateuser_url = "http://" + host + ":" + str(os.getenv("MS_VALIDATE_USER_SERVICE_PORT", "80"))
 
 url = requests.get("https://raw.githubusercontent.com/pyupio/safety-db/master/data/insecure_full.json")
 safety_db = json.loads(url.text)
@@ -221,9 +221,7 @@ def saveComponentsData(response, compid, bomformat, components_data):
             try:
                 with engine.connect() as connection:
                     conn = connection.connection
-                    conn.set_session(autocommit=False)
                     cursor = conn.cursor()
-                    records_list_template = ",".join(["%s"] * len(components_data))
 
                     # delete old licenses
                     sqlstmt = "DELETE from dm_componentdeps where compid=%s and deptype=%s"
@@ -234,11 +232,12 @@ def saveComponentsData(response, compid, bomformat, components_data):
                     cursor.execute(sqlstmt, params)
 
                     # insert into database
-                    sqlstmt = "INSERT INTO dm_componentdeps(compid, packagename, packageversion, deptype, name, url, summary, purl, pkgtype) VALUES {} ON CONFLICT ON CONSTRAINT dm_componentdeps_pkey DO NOTHING".format(
-                        records_list_template
-                    )
+                    sqlstmt = """
+                        INSERT INTO dm_componentdeps(compid, packagename, packageversion, deptype, name, url, summary, purl, pkgtype)
+                        VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9) ON CONFLICT ON CONSTRAINT dm_componentdeps_pkey DO NOTHING
+                    """
 
-                    cursor.execute(sqlstmt, components_data)
+                    cursor.executemany(sqlstmt, components_data)
 
                     rows_inserted = cursor.rowcount
                     # Commit the changes to the database
@@ -268,4 +267,4 @@ def saveComponentsData(response, compid, bomformat, components_data):
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=5003)
+    uvicorn.run(app, port=5003)
