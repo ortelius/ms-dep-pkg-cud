@@ -234,7 +234,7 @@ def saveComponentsData(response, compid, bomformat, components_data):
                     # insert into database
                     sqlstmt = """
                         INSERT INTO dm_componentdeps(compid, packagename, packageversion, deptype, name, url, summary, purl, pkgtype)
-                        VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9) ON CONFLICT ON CONSTRAINT dm_componentdeps_pkey DO NOTHING
+                        VALUES {} ON CONFLICT ON CONSTRAINT dm_componentdeps_pkey DO NOTHING
                     """
 
                     cursor.executemany(sqlstmt, components_data)
