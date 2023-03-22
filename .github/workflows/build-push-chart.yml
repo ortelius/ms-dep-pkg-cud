@@ -7,6 +7,8 @@ on:
       - "chart/**/Chart.yaml"
       - "chart/**/values.yaml"
   push:
+    branches:
+      - main
     paths-ignore:
       - "chart/**/Chart.yaml"
       - "chart/**/values.yaml"
