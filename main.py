@@ -23,15 +23,49 @@ import requests
 import uvicorn
 from fastapi import Body, FastAPI, HTTPException, Request, Response, status
 from pydantic import BaseModel  # pylint: disable=E0611
-from sqlalchemy import create_engine, sql
-from sqlalchemy.exc import InterfaceError, OperationalError, StatementError
+from sqlalchemy import create_engine
+from sqlalchemy.exc import InterfaceError, OperationalError
 
 # Init Globals
 service_name = "ortelius-ms-dep-pkg-cud"
 db_conn_retry = 3
 
+tags_metadata = [
+    {
+        "name": "health",
+        "description": "health check end point",
+    },
+    {
+        "name": "cyclonedx",
+        "description": "CycloneDX Upload end point",
+    },
+    {
+        "name": "spdx",
+        "description": "SPDX Upload end point",
+    },
+    {
+        "name": "safety",
+        "description": "Python Safety Upload end point",
+    },
+]
+
 # Init FastAPI
-app = FastAPI(title=service_name, description=service_name)
+app = FastAPI(
+    title=service_name,
+    description="RestAPI endpoint for adding SBOM data to a component",
+    version="10.0.0",
+    license_info={
+        "name": "Apache 2.0",
+        "url": "https://www.apache.org/licenses/LICENSE-2.0.html",
+    },
+    servers=[{"url": "http://localhost:5003", "description": "Local Server"}],
+    contact={
+        "name": "Ortelius Open Source Project",
+        "url": "https://github.com/ortelius/ortelius/issues",
+        "email": "support@ortelius.io",
+    },
+    openapi_tags=tags_metadata,
+)
 
 
 # Init db connection
@@ -59,8 +93,11 @@ class StatusMsg(BaseModel):
     service_name: Optional[str] = None
 
 
-@app.get("/health")
+@app.get("/health", tags=["health"])
 async def health(response: Response) -> StatusMsg:
+    """
+    This health check end point used by Kubernetes
+    """
     try:
         with engine.connect() as connection:
             conn = connection.connection
@@ -83,14 +120,17 @@ async def health(response: Response) -> StatusMsg:
 
 
 def example(filename):
-    text = ""
+    example_dict = {}
     with open(filename, "r") as f:
-        text = f.read()
-    return text
+        example_dict = json.load(f)
+    return example_dict
 
 
-@app.post("/msapi/deppkg/cyclonedx")
+@app.post("/msapi/deppkg/cyclonedx", tags=["cyclonedx"])
 async def cyclonedx(request: Request, response: Response, compid: int, cyclonedx_json: dict = Body(..., example=example("cyclonedx.json"), description="JSON output from running CycloneDX")):
+    """
+    This is the end point used to upload a CycloneDX SBOM
+    """
     components_data = []
     components = cyclonedx_json.get("components", [])
 
@@ -125,8 +165,11 @@ async def cyclonedx(request: Request, response: Response, compid: int, cyclonedx
     return saveComponentsData(response, compid, bomformat, components_data)
 
 
-@app.post("/msapi/deppkg/spdx")
+@app.post("/msapi/deppkg/spdx", tags=["spdx"])
 async def spdx(request: Request, response: Response, compid: int, spdx_json: dict = Body(..., example=example("spdx.json"), description="JSON output from running SPDX")):
+    """
+    This is the end point used to upload a SPDX SBOM
+    """
     try:
         result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies)
         if result is None:
@@ -174,8 +217,11 @@ async def spdx(request: Request, response: Response, compid: int, spdx_json: dic
     return saveComponentsData(response, compid, bomformat, components_data)
 
 
-@app.post("/msapi/deppkg/safety")
+@app.post("/msapi/deppkg/safety", tags=["safety"])
 async def safety(request: Request, response: Response, compid: int, safety_json: list = Body(..., example=example("safety.json"), description="JSON output from running safety")):
+    """
+    This is the end point used to upload a Python Safety SBOM
+    """
     result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies)
     if result is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed")
