@@ -17,7 +17,6 @@ import logging
 import os
 import socket
 from time import sleep
-from typing import Optional
 
 import requests
 import uvicorn
@@ -27,8 +26,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.exc import InterfaceError, OperationalError
 
 # Init Globals
-service_name = "ortelius-ms-dep-pkg-cud"
-db_conn_retry = 3
+service_name = "ortelius-ms-dep-pkg-cud"  # pylint: disable=C0103
+db_conn_retry = 3  # pylint: disable=C0103
 
 tags_metadata = [
     {
@@ -81,7 +80,7 @@ if len(validateuser_url) == 0:
     host = socket.gethostbyaddr(validateuser_host)[0]
     validateuser_url = "http://" + host + ":" + str(os.getenv("MS_VALIDATE_USER_SERVICE_PORT", "80"))
 
-url = requests.get("https://raw.githubusercontent.com/pyupio/safety-db/master/data/insecure_full.json")
+url = requests.get("https://raw.githubusercontent.com/pyupio/safety-db/master/data/insecure_full.json", timeout=5)
 safety_db = json.loads(url.text)
 
 engine = create_engine("postgresql+psycopg2://" + db_user + ":" + db_pass + "@" + db_host + ":" + db_port + "/" + db_name, pool_pre_ping=True)
@@ -121,8 +120,8 @@ async def health(response: Response) -> StatusMsg:
 
 def example(filename):
     example_dict = {}
-    with open(filename, "r") as f:
-        example_dict = json.load(f)
+    with open(filename, mode="r", encoding="utf-8") as example_file:
+        example_dict = json.load(example_file)
     return example_dict
 
 
@@ -131,6 +130,16 @@ async def cyclonedx(request: Request, response: Response, compid: int, cyclonedx
     """
     This is the end point used to upload a CycloneDX SBOM
     """
+    try:
+        result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies, timeout=5)
+        if result is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed")
+
+        if result.status_code != status.HTTP_200_OK:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed status_code=" + str(result.status_code))
+    except Exception as err:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed:" + str(err)) from None
+
     components_data = []
     components = cyclonedx_json.get("components", [])
 
@@ -149,11 +158,11 @@ async def cyclonedx(request: Request, response: Response, compid: int, cyclonedx
         license_name = ""
         licenses = component.get("licenses", None)
         if licenses is not None and len(licenses) > 0:
-            license = licenses[0].get("license", {})
-            if license.get("id", None) is not None:
-                license_name = license.get("id")
-            elif license.get("name", None) is not None:
-                license_name = license.get("name")
+            current_license = licenses[0].get("license", {})
+            if current_license.get("id", None) is not None:
+                license_name = current_license.get("id")
+            elif current_license.get("name", None) is not None:
+                license_name = current_license.get("name")
                 if "," in license_name:
                     license_name = license_name.split(",")[0]
 
@@ -162,7 +171,7 @@ async def cyclonedx(request: Request, response: Response, compid: int, cyclonedx
         component_data = (compid, packagename, packageversion, bomformat, license_name, license_url, summary, purl, pkgtype)
         components_data.append(component_data)
 
-    return saveComponentsData(response, compid, bomformat, components_data)
+    return save_components_data(response, compid, bomformat, components_data)
 
 
 @app.post("/msapi/deppkg/spdx", tags=["spdx"])
@@ -171,7 +180,7 @@ async def spdx(request: Request, response: Response, compid: int, spdx_json: dic
     This is the end point used to upload a SPDX SBOM
     """
     try:
-        result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies)
+        result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies, timeout=5)
         if result is None:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed")
 
@@ -203,18 +212,18 @@ async def spdx(request: Request, response: Response, compid: int, spdx_json: dic
         summary = ""
         license_url = ""
         license_name = ""
-        license = component.get("licenseDeclared")
-        if license != "NOASSERTION":
-            license_name = license
+        current_license = component.get("licenseDeclared")
+        if current_license != "NOASSERTION":
+            license_name = current_license
             license_url = "https://spdx.org/licenses/" + license_name + ".html"
 
         if "," in license_name:
-            license_name = license_name.split(",")[0]
+            license_name = license_name.split(",", maxsplit=1)[0]
 
         component_data = (compid, packagename, packageversion, bomformat, license_name, license_url, summary, purl, pkgtype)
         components_data.append(component_data)
 
-    return saveComponentsData(response, compid, bomformat, components_data)
+    return save_components_data(response, compid, bomformat, components_data)
 
 
 @app.post("/msapi/deppkg/safety", tags=["safety"])
@@ -222,7 +231,7 @@ async def safety(request: Request, response: Response, compid: int, safety_json:
     """
     This is the end point used to upload a Python Safety SBOM
     """
-    result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies)
+    result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies, timeout=5)
     if result is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed")
 
@@ -249,10 +258,10 @@ async def safety(request: Request, response: Response, compid: int, safety_json:
 
         component_data = (compid, packagename, packageversion, bomformat, cve_name, cve_url, summary)
         components_data.append(component_data)
-    return saveComponentsData(response, compid, bomformat, components_data)
+    return save_components_data(response, compid, bomformat, components_data)
 
 
-def saveComponentsData(response, compid, bomformat, components_data):
+def save_components_data(response, compid, bomformat, components_data):
     try:
         if len(components_data) == 0:
             return {"detail": "components not updated"}
@@ -297,7 +306,7 @@ def saveComponentsData(response, compid, bomformat, components_data):
             except (InterfaceError, OperationalError) as ex:
                 if attempt < no_of_retry:
                     sleep_for = 0.2
-                    logging.error("Database connection error: {} - sleeping for {}s" " and will retry (attempt #{} of {})".format(ex, sleep_for, attempt, no_of_retry))
+                    logging.error("Database connection error: %s - sleeping for %d seconds and will retry (attempt #%d of %d)", ex, sleep_for, attempt, no_of_retry)
                     # 200ms of sleep time in cons. retry calls
                     sleep(sleep_for)
                     attempt += 1
