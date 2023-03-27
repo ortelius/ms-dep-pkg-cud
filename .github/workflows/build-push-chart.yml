@@ -51,16 +51,17 @@ jobs:
           REGISTRY: quay.io
           BRANCH: ${{ github.head_ref || github.ref_name }}
         run: |
+          BRANCH=$(echo "${{ env.BRANCH }}" | cut -d'/' -f1)
           BASE_VERSION=$(curl -s "https://ortelius.github.io/${{ github.event.repository.name }}/index.yaml" | grep version: | awk '{print $2}' | cut -f1-2 -d. | sort -u -r --version-sort | head -1)
           SHORT_SHA=$(echo ${{ github.sha }} | cut -c 1-6)
           {
            echo "dhurl=${{ env.DHURL }}"
-           echo "branch=${{ env.BRANCH }}"
+           echo "branch=${BRANCH}"
            echo "chart_version=${BASE_VERSION}.${{ github.run_number }}"
            echo "compname=${{ github.event.repository.name }}"
-           echo "image_repo_tag=${{ env.REGISTRY }}/${{ github.repository }}:${{ env.BRANCH }}-v${BASE_VERSION}.${{ github.run_number }}-g${SHORT_SHA}"
+           echo "image_repo_tag=${{ env.REGISTRY }}/${{ github.repository }}:${BRANCH}-v${BASE_VERSION}.${{ github.run_number }}-g${SHORT_SHA}"
            echo "image_repository=${{ env.REGISTRY }}/${{ github.repository }}"
-           echo "image_tag=${{ env.BRANCH }}-v${BASE_VERSION}.${{ github.run_number }}-g${SHORT_SHA}"
+           echo "image_tag=${BRANCH}-v${BASE_VERSION}.${{ github.run_number }}-g${SHORT_SHA}"
            echo "image_version=${BASE_VERSION}.${{ github.run_number }}-g${SHORT_SHA}"
            echo "registry=${{ env.REGISTRY }}"
            echo "short_sha=${SHORT_SHA}"
