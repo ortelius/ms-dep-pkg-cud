@@ -249,6 +249,7 @@ jobs:
           CHART_VERSION: ${{ needs.setenv.outputs.chart_version }}
           COMPNAME: ${{ needs.setenv.outputs.compname }}
           DIGEST: ${{ needs.release.outputs.digest }}
+          IMAGE_REPO: ${{ needs.setenv.outputs.image_repository }}
           IMAGE_REPO_TAG: ${{ needs.setenv.outputs.image_repo_tag }}
           IMAGE_TAG: ${{ needs.setenv.outputs.image_tag }}
           IMAGE_VERSION: ${{ needs.setenv.outputs.image_version }}
