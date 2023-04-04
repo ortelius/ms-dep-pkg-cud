@@ -1,5 +1,13 @@
 # ortelius-ms-dep-pkg-cud
 
+![Release](https://img.shields.io/github/v/release/ortelius/ms-dep-pkg-cud?sort=semver)
+![license](https://img.shields.io/github/license/ortelius/ms-dep-pkg-cud)
+
+![Build](https://img.shields.io/github/actions/workflow/status/ortelius/ms-dep-pkg-cud/build-push-chart.yml)
+[![MegaLinter](https://github.com/ortelius/ms-dep-pkg-cud/workflows/MegaLinter/badge.svg?branch=main)](https://github.com/ortelius/ms-dep-pkg-cud/actions?query=workflow%3AMegaLinter+branch%3Amain)
+![CodeQL](https://github.com/ortelius/ms-dep-pkg-cud/workflows/CodeQL/badge.svg)
+
+![Discord](https://img.shields.io/discord/722468819091849316)
 Dependency Package Data Microservice - Create, Update and Delete
 
 HELM_CHART
