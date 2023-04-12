@@ -279,7 +279,7 @@ def save_components_data(response, compid, bomformat, components_data):
                     cursor = conn.cursor()
 
                     # delete old licenses
-                    sqlstmt = "DELETE from dm_componentdeps where compid=%s and deptype=%s"
+                    sqlstmt = "DELETE from dm.dm_componentdeps where compid=%s and deptype=%s"
                     params = (
                         compid,
                         bomformat,
@@ -288,8 +288,8 @@ def save_components_data(response, compid, bomformat, components_data):
 
                     # insert into database
                     sqlstmt = """
-                        INSERT INTO dm_componentdeps(compid, packagename, packageversion, deptype, name, url, summary, purl, pkgtype)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) ON CONFLICT ON CONSTRAINT dm_componentdeps_pkey DO NOTHING
+                        INSERT INTO dm.dm_componentdeps(compid, packagename, packageversion, deptype, name, url, summary, purl, pkgtype)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) ON CONFLICT ON CONSTRAINT dm.dm_componentdeps_pkey DO NOTHING
                     """
 
                     cursor.executemany(sqlstmt, components_data)
