@@ -229,6 +229,7 @@ async def safety(request: Request, response: Response, compid: int, safety_json:
     """
     This is the end point used to upload a Python Safety SBOM
     """
+    global safety_db
     result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies, timeout=5)
     if result is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed")
@@ -236,7 +237,7 @@ async def safety(request: Request, response: Response, compid: int, safety_json:
     if result.status_code != status.HTTP_200_OK:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed status_code=" + str(result.status_code))
 
-    if (safety_db is None):
+    if safety_db is None:
         url = requests.get("https://raw.githubusercontent.com/pyupio/safety-db/master/data/insecure_full.json", timeout=5)
         safety_db = json.loads(url.text)
 
