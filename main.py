@@ -19,6 +19,7 @@ import json
 import logging
 import os
 import socket
+import threading
 from time import sleep
 
 import requests
@@ -85,6 +86,167 @@ if len(validateuser_url) == 0:
     validateuser_url = "http://" + host + ":" + str(os.getenv("MS_VALIDATE_USER_SERVICE_PORT", "80"))
 
 engine = create_engine("postgresql+psycopg2://" + db_user + ":" + db_pass + "@" + db_host + ":" + db_port + "/" + db_name, pool_pre_ping=True)
+
+
+def calculate_cvss_score(cvss_vector):
+    try:
+        # Define metric weights for CVSS v2
+        cvss2_metric_weights = {
+            "AV": {"N": 0.85, "A": 0.62, "L": 0.55},
+            "AC": {"H": 0.44, "M": 0.77},
+            "Au": {"N": 0.704, "S": 0.56},
+            "C": {"N": 0.0, "P": 0.275, "C": 0.660},
+            "I": {"N": 0.0, "P": 0.275, "C": 0.660},
+            "A": {"N": 0.0, "P": 0.275, "C": 0.660},
+        }
+
+        # Define metric weights for CVSS v3
+        cvss3_metric_weights = {
+            "AV": {"N": 0.85, "A": 0.62, "L": 0.55, "P": 0.2},
+            "AC": {"H": 0.44, "L": 0.77},
+            "PR": {"N": 0.85, "L": 0.62, "H": 0.27},
+            "UI": {"N": 0.85, "R": 0.62},
+            "S": {"U": 6.42, "C": 7.52},
+            "C": {"N": 0.0, "L": 0.22, "H": 0.56},
+            "I": {"N": 0.0, "L": 0.22, "H": 0.56},
+            "A": {"N": 0.0, "L": 0.22, "H": 0.56},
+        }
+
+        # Determine the CVSS version
+        if cvss_vector.startswith("CVSS:2"):
+            metric_weights = cvss2_metric_weights
+        elif cvss_vector.startswith("CVSS:3"):
+            metric_weights = cvss3_metric_weights
+        else:
+            raise ValueError("Invalid CVSS vector format")
+
+        # Parse the CVSS vector
+        vector_parts = cvss_vector.split("/")
+        if len(vector_parts) != 3:
+            raise ValueError("Invalid CVSS vector format")
+
+        base_vector = vector_parts[1]
+
+        # Calculate the base score
+        base_score = 0.0
+        for metric in base_vector.split(":"):
+            metric_name, metric_value = metric.split("=")
+            if metric_name in metric_weights and metric_value in metric_weights[metric_name]:
+                base_score += metric_weights[metric_name][metric_value]
+
+        base_score = min(10, base_score)
+        return round(base_score, 1)
+
+    except Exception as ex:
+        print(f"Error calculating CVSS score: {ex}")
+        return None
+
+
+def get_vulns(payload):
+    vulns = []
+    url = "https://api.osv.dev/v1/query"
+    try:
+        response = requests.post(url, json=payload, headers={"Content-Type": "application/json"}, timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            if "vulns" in data:
+                vulns = data["vulns"]
+    except Exception as ex:
+        print(ex)
+
+    return vulns
+
+
+def update_vulns():
+    # Retry logic for failed query
+    no_of_retry = db_conn_retry
+    attempt = 1
+    while True:
+        try:
+            sqlstmt = """
+                select distinct packagename, packageversion, purl
+                from dm.dm_componentdeps where deptype = 'license'
+            """
+
+            with engine.connect() as connection:
+                conn = connection.connection
+                cursor = conn.cursor()
+                cursor.execute(sqlstmt)
+                results = cursor.fetchall()
+
+                for result in results:
+                    packagename, packageversion, purl = result
+
+                    if purl is None or purl.strip() == "":
+                        payload = {"package": {"name": packagename.lower()}, "version": packageversion.lower()}
+                    else:
+                        if "?" in purl:
+                            purl = purl.split("?")[0]
+                        payload = {"package": {"purl": purl.lower()}}
+
+                    vulns = get_vulns(payload)
+
+                    for obj in vulns:
+                        vulnid = obj.get("id", "")
+                        desc = obj.get("summary", "")
+
+                        if "aliases" in obj:
+                            aliases = " ".join(obj["aliases"])
+                            if desc:
+                                desc = f"{aliases}: {desc}"
+                            else:
+                                desc = aliases
+
+                        risklevel = ""
+                        cvss = ""
+                        if "severity" in obj:
+                            sevlist = obj.get("severity", [])
+                            sev = sevlist.get(0)
+                            cvss = sev.get("score", None)
+
+                            if cvss is not None:
+                                base = calculate_cvss_score(cvss)
+                                if base is not None:
+                                    if base == 0.0:
+                                        risklevel = "None"
+                                    elif 0.1 <= base <= 3.9:
+                                        risklevel = "Low"
+                                    elif 4.0 <= base <= 6.9:
+                                        risklevel = "Medium"
+                                    elif 7.0 <= base <= 8.9:
+                                        risklevel = "High"
+                                    elif base >= 9.0:
+                                        risklevel = "Critical"
+
+                            if not risklevel and "database_specific" in obj:
+                                sec = obj["database_specific"]
+                                if "severity" in sec:
+                                    risklevel = sec["severity"]
+
+                        risklevel = risklevel.capitalize()
+                        if risklevel == "Moderate":
+                            risklevel = "Medium"
+
+                        try:
+                            sqlstmt = """
+                                insert into dm.dm_vulns (packagename, packageversion, purl, id, summary, risklevel, cvss)
+                                values (%s, %s, %s, %s, %s, %s, %s) ON CONFLICT ON CONSTRAINT dm_vulns_pkey DO NOTHING
+                            """
+                            params = tuple([packagename, packageversion, purl, vulnid, desc, risklevel, cvss])
+                            cursor.execute(sqlstmt, params)
+                            conn.commit()
+                        except Exception:
+                            print(f"Duplicate Vuln: {packagename}, {packageversion}, {vulnid}, {desc}, {risklevel}, {cvss}")
+        except (InterfaceError, OperationalError) as ex:
+            if attempt < no_of_retry:
+                sleep_for = 0.2
+                logging.error("Database connection error: %s - sleeping for %d seconds and will retry (attempt #%d of %d)", ex, sleep_for, attempt, no_of_retry)
+                # 200ms of sleep time in cons. retry calls
+                sleep(sleep_for)
+                attempt += 1
+                continue
+            else:
+                raise
 
 
 # health check endpoint
@@ -224,6 +386,8 @@ async def spdx(request: Request, response: Response, compid: int, spdx_json: dic
         component_data = (compid, packagename, packageversion, bomformat, license_name, license_url, summary, purl, pkgtype)
         components_data.append(component_data)
 
+    threading.Thread(target=update_vulns).start()
+
     return save_components_data(response, compid, bomformat, components_data)
 
 
@@ -232,7 +396,7 @@ async def safety(request: Request, response: Response, compid: int, safety_json:
     """
     This is the end point used to upload a Python Safety SBOM
     """
-    global safety_db
+    global safety_db  # pylint: disable=W0603
     result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies, timeout=5)
     if result is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed")
