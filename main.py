@@ -289,7 +289,7 @@ def example(filename):
 
 
 @app.post("/msapi/deppkg/cyclonedx", tags=["cyclonedx"])
-async def cyclonedx(request: Request, response: Response, compid: int, cyclonedx_json: dict = Body(..., example=example("cyclonedx.json"), description="JSON output from running CycloneDX")):
+async def cyclonedx(request: Request, response: Response, compid: int):
     """
     This is the end point used to upload a CycloneDX SBOM
     """
@@ -303,6 +303,7 @@ async def cyclonedx(request: Request, response: Response, compid: int, cyclonedx
     except Exception as err:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed:" + str(err)) from None
 
+    cyclonedx_json = await request.json()
     components_data = []
     components = cyclonedx_json.get("components", [])
 
@@ -338,10 +339,11 @@ async def cyclonedx(request: Request, response: Response, compid: int, cyclonedx
 
 
 @app.post("/msapi/deppkg/spdx", tags=["spdx"])
-async def spdx(request: Request, response: Response, compid: int, spdx_json: dict = Body(..., example=example("spdx.json"), description="JSON output from running SPDX")):
+async def spdx(request: Request, response: Response, compid: int):
     """
     This is the end point used to upload a SPDX SBOM
     """
+
     try:
         result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies, timeout=5)
         if result is None:
@@ -352,6 +354,7 @@ async def spdx(request: Request, response: Response, compid: int, spdx_json: dic
     except Exception as err:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed:" + str(err)) from None
 
+    spdx_json = await request.json()
     components_data = []
     components = spdx_json.get("packages", [])
 
