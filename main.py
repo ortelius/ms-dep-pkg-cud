@@ -24,7 +24,7 @@ from time import sleep
 
 import requests
 import uvicorn
-from fastapi import Body, FastAPI, HTTPException, Request, Response, status
+from fastapi import FastAPI, HTTPException, Request, Response, status
 from pydantic import BaseModel  # pylint: disable=E0611
 from sqlalchemy import create_engine
 from sqlalchemy.exc import InterfaceError, OperationalError
@@ -251,8 +251,8 @@ def update_vulns():
 
 # health check endpoint
 class StatusMsg(BaseModel):
-    status: str
-    service_name: str
+    status: str = ""
+    service_name: str = ""
 
 
 @app.get("/health", tags=["health"])
@@ -395,7 +395,7 @@ async def spdx(request: Request, response: Response, compid: int):
 
 
 @app.post("/msapi/deppkg/safety", tags=["safety"])
-async def safety(request: Request, response: Response, compid: int, safety_json: list = Body(..., example=example("safety.json"), description="JSON output from running safety")):
+async def safety(request: Request, response: Response, compid: int):
     """
     This is the end point used to upload a Python Safety SBOM
     """
@@ -411,6 +411,7 @@ async def safety(request: Request, response: Response, compid: int, safety_json:
         url = requests.get("https://raw.githubusercontent.com/pyupio/safety-db/master/data/insecure_full.json", timeout=5)
         safety_db = json.loads(url.text)
 
+    safety_json = await request.json()
     components_data = []
     bomformat = "cve"
     for component in safety_json:
