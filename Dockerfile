@@ -1,5 +1,7 @@
 FROM cgr.dev/chainguard/python:latest-dev@sha256:f5f964c62d8f72dea8ce06ad55005bb8db13d636c1a401c00c0cd58f16c477dc AS builder
 
+#force build
+
 COPY . /app
 
 WORKDIR /app
