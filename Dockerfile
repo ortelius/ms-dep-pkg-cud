@@ -5,7 +5,7 @@ FROM cgr.dev/chainguard/python:latest-dev@sha256:502e72496fc093754810dbb6221dc50
 COPY . /app
 
 WORKDIR /app
-RUN python -m pip install --no-cache-dir -r requirements.txt --require-hashes --no-warn-script-location;
+RUN python -m pip install --no-cache-dir -r requirements.txt  --require-hashes --no-warn-script-location;
 
 FROM cgr.dev/chainguard/python:latest@sha256:19ed249c83e1d3daea1629784d2b680dd2b5b490b8ae97d7b5cde19ab1a50aaf
 USER nonroot
