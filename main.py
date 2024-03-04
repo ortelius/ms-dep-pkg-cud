@@ -88,6 +88,13 @@ if len(validateuser_url) == 0:
 engine = create_engine("postgresql+psycopg2://" + db_user + ":" + db_pass + "@" + db_host + ":" + db_port + "/" + db_name, pool_pre_ping=True)
 
 
+def example(filename):
+    example_dict = {}
+    with open(filename, mode="r", encoding="utf-8") as example_file:
+        example_dict = json.load(example_file)
+    return example_dict
+
+
 def calculate_cvss_score(cvss_vector):
     try:
         # Define metric weights for CVSS v2
@@ -278,14 +285,14 @@ async def health(response: Response) -> StatusMsg:
 
 # end health check
 
-# validate user endpoint
 
-
-def example(filename):
-    example_dict = {}
-    with open(filename, mode="r", encoding="utf-8") as example_file:
-        example_dict = json.load(example_file)
-    return example_dict
+@app.get("/msapi/deppkg")
+def sbom_type():
+    """
+    This is the end point used determine the type of SBOM format this microservice can handle
+    """
+    # Return a JSON response with SBOMType: 'preparsed'
+    return {"SBOMType": "preparsed"}
 
 
 @app.post("/msapi/deppkg/cyclonedx", tags=["cyclonedx"])
