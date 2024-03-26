@@ -244,6 +244,7 @@ def update_vulns():
                             conn.commit()
                         except Exception:
                             print(f"Duplicate Vuln: {packagename}, {packageversion}, {vulnid}, {desc}, {risklevel}, {cvss}")
+                return
         except (InterfaceError, OperationalError) as ex:
             if attempt < no_of_retry:
                 sleep_for = 0.2
