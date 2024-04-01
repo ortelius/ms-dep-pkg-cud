@@ -1134,7 +1134,7 @@ async def cyclonedx(request: Request, response: Response, compid: int):
     global dhurl
     global cookies
 
-    dhurl = request.host_url
+    dhurl = f"{request.base_url.scheme}://{request.base_url.netloc}"
     cookies = request.cookies
 
     try:
@@ -1191,7 +1191,7 @@ async def spdx(request: Request, response: Response, compid: int):
     global dhurl
     global cookies
 
-    dhurl = request.host_url
+    dhurl = f"{request.base_url.scheme}://{request.base_url.netloc}"
     cookies = request.cookies
 
     try:
@@ -1354,7 +1354,8 @@ async def purl2comp(request: Request, response: Response):
     global dhurl
     global cookies
 
-    dhurl = request.host_url
+    dhurl = f"{request.base_url.scheme}://{request.base_url.netloc}"
+    # dhurl = "http://localhost:8181"
     cookies = request.cookies
 
     try:
@@ -1378,5 +1379,4 @@ async def purl2comp(request: Request, response: Response):
 
 
 if __name__ == "__main__":
-    update_vulns()
     uvicorn.run(app, port=5003)
