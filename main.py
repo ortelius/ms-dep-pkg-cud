@@ -87,7 +87,7 @@ db_name = os.getenv("DB_NAME", "postgres")
 db_user = os.getenv("DB_USER", "postgres")
 db_pass = os.getenv("DB_PASS", "postgres")
 db_port = os.getenv("DB_PORT", "5432")
-validateuser_url = os.getenv("VALIDATEUSER_URL", "")
+validateuser_url = os.getenv("VALIDATEUSER_URL", "http://localhost:5000")
 safety_db = None
 
 if len(validateuser_url) == 0:
@@ -504,6 +504,9 @@ def clean_name(name):
     name = name.replace("+", "_")
     name = name.replace(":", "_")
     name = name.replace("~", "_")
+    name = name.replace("(", "")
+    name = name.replace(")", "")
+    name = name.replace("#", "_")
     return name
 
 
@@ -848,12 +851,18 @@ def get_npm_info(package_name, version):
     return repo_url, commit_sha
 
 
-def get_golang_info(module_name, version):
-    url = f"https://proxy.golang.org/{module_name}/@v/{version}.info"
+def get_golang_info(domain, module_name, version):
+    repo_url = ""
+    commit_sha = None
+
+    url = f"https://proxy.golang.org/{domain}/{module_name}/@v/{version}.info"
     response = requests.get(url, timeout=2)
     data = response.json()
-    repo_url = data.get("RepoRoot", "")
-    commit_sha = get_commit_sha(repo_url, version)
+    origin = data.get("Origin", None)
+    if origin is not None:
+        repo_url = origin.get("URL", None)
+        commit_sha = origin.get("Hash", None)
+
     return repo_url, commit_sha
 
 
@@ -903,7 +912,7 @@ def getCommitFromPurl(package_type, package_namespace, package_name, package_ver
     elif package_type == "npm":
         repo_url, commit_sha = get_npm_info(package_name, package_version)
     elif package_type == "golang":
-        repo_url, commit_sha = get_golang_info(package_name, package_version)
+        repo_url, commit_sha = get_golang_info(package_namespace, package_name, package_version)
     elif package_type == "maven":
         repo_url, commit_sha = get_java_info(package_namespace, package_name, package_version)
     elif package_type == "cargo":
