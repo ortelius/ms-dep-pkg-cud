@@ -19,7 +19,6 @@ import json
 import logging
 import os
 import re
-import socket
 import subprocess  # nosec B404
 import tempfile
 import threading
@@ -90,10 +89,10 @@ db_port = os.getenv("DB_PORT", "5432")
 validateuser_url = os.getenv("VALIDATEUSER_URL", "")
 safety_db = None
 
-if len(validateuser_url) == 0:
-    validateuser_host = os.getenv("MS_VALIDATE_USER_SERVICE_HOST", "127.0.0.1")
-    host = socket.gethostbyaddr(validateuser_host)[0]
-    validateuser_url = "http://" + host + ":" + str(os.getenv("MS_VALIDATE_USER_SERVICE_PORT", "80"))
+# if len(validateuser_url) == 0:
+#    validateuser_host = os.getenv("MS_VALIDATE_USER_SERVICE_HOST", "127.0.0.1")
+#    host = socket.gethostbyaddr(validateuser_host)[0]
+#    validateuser_url = "http://" + host + ":" + str(os.getenv("MS_VALIDATE_USER_SERVICE_PORT", "80"))
 
 engine = create_engine("postgresql+psycopg2://" + db_user + ":" + db_pass + "@" + db_host + ":" + db_port + "/" + db_name, pool_pre_ping=True)
 
@@ -507,6 +506,7 @@ def clean_name(name):
     name = name.replace("(", "")
     name = name.replace(")", "")
     name = name.replace("#", "_")
+    name = name.replace("@", "")
     return name
 
 
@@ -650,7 +650,7 @@ def create_compver(dhurl, cookies, purl):
     else:
         domain = "GLOBAL.Open Source." + purl_parts.type + "." + purl_parts.namespace.replace(".", "_")
 
-    domain = domain.replace("/", ".").replace("-", "_").replace("+", "_")
+    domain = domain.replace("/", ".").replace("-", "_").replace("+", "_").replace("@", "")
 
     compname = ""
     version = ""
