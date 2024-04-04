@@ -1364,7 +1364,13 @@ async def purl2comp(request: Request, response: Response):
     global dhurl
     global cookies
 
-    dhurl = f"{request.base_url.scheme}://{request.base_url.netloc}"
+    dhurl = f"{request.base_url.scheme}://{request.base_url.netloc}".replace("http:", "https:")
+
+    resp = requests.head(dhurl, timeout=1)
+
+    if resp is None or resp.status_code != 200:
+       dhurl = f"{request.base_url.scheme}://{request.base_url.netloc}"
+
     # dhurl = "http://localhost:8181"
     cookies = request.cookies
 
