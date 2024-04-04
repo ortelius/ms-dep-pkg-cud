@@ -24,8 +24,9 @@ import subprocess  # nosec B404
 import tempfile
 import threading
 import urllib.parse
-from time import sleep
+import warnings
 from pprint import pprint
+from time import sleep
 
 import requests
 import uvicorn
@@ -63,6 +64,8 @@ tags_metadata = [
 dhurl = ""
 cookies = {}  # type: ignore
 
+warnings.filterwarnings("ignore", message="Invalid HTTP request received", category=UserWarning)
+
 # Init FastAPI
 app = FastAPI(
     title=service_name,
@@ -88,13 +91,13 @@ db_name = os.getenv("DB_NAME", "postgres")
 db_user = os.getenv("DB_USER", "postgres")
 db_pass = os.getenv("DB_PASS", "postgres")
 db_port = os.getenv("DB_PORT", "5432")
-validateuser_url = os.getenv("VALIDATEUSER_URL", "")
+validateuser_url = os.getenv("VALIDATEUSER_URL", "http://localhost:5000")
 safety_db = None
 
 if len(validateuser_url) == 0:
-   validateuser_host = os.getenv("MS_VALIDATE_USER_SERVICE_HOST", "127.0.0.1")
-   host = socket.gethostbyaddr(validateuser_host)[0]
-   validateuser_url = "http://" + host + ":" + str(os.getenv("MS_VALIDATE_USER_SERVICE_PORT", "80"))
+    validateuser_host = os.getenv("MS_VALIDATE_USER_SERVICE_HOST", "127.0.0.1")
+    host = socket.gethostbyaddr(validateuser_host)[0]
+    validateuser_url = "http://" + host + ":" + str(os.getenv("MS_VALIDATE_USER_SERVICE_PORT", "80"))
 
 engine = create_engine("postgresql+psycopg2://" + db_user + ":" + db_pass + "@" + db_host + ":" + db_port + "/" + db_name, pool_pre_ping=True)
 
@@ -858,12 +861,14 @@ def get_golang_info(domain, module_name, version):
     commit_sha = None
 
     url = f"https://proxy.golang.org/{domain}/{module_name}/@v/{version}.info"
+    print("Version URL: " + url)
     response = requests.get(url, timeout=2)
-    data = response.json()
-    origin = data.get("Origin", None)
-    if origin is not None:
-        repo_url = origin.get("URL", None)
-        commit_sha = origin.get("Hash", None)
+    if response.status_code == 200:
+        data = response.json()
+        origin = data.get("Origin", None)
+        if origin is not None:
+            repo_url = origin.get("URL", None)
+            commit_sha = origin.get("Hash", None)
 
     return repo_url, commit_sha
 
@@ -1145,7 +1150,16 @@ async def cyclonedx(request: Request, response: Response, compid: int):
     global dhurl
     global cookies
 
-    dhurl = f"{request.base_url.scheme}://{request.base_url.netloc}"
+    dhurl = f"{request.base_url.scheme}://{request.base_url.netloc}".replace("http:", "https:")
+
+    try:
+        resp = requests.head(dhurl, timeout=1)
+
+        if resp is None or resp.status_code != 200:
+            dhurl = f"{request.base_url.scheme}://{request.base_url.netloc}"
+    except Exception:
+        dhurl = f"{request.base_url.scheme}://{request.base_url.netloc}"
+
     cookies = request.cookies
 
     try:
@@ -1202,7 +1216,16 @@ async def spdx(request: Request, response: Response, compid: int):
     global dhurl
     global cookies
 
-    dhurl = f"{request.base_url.scheme}://{request.base_url.netloc}"
+    dhurl = f"{request.base_url.scheme}://{request.base_url.netloc}".replace("http:", "https:")
+
+    try:
+        resp = requests.head(dhurl, timeout=1)
+
+        if resp is None or resp.status_code != 200:
+            dhurl = f"{request.base_url.scheme}://{request.base_url.netloc}"
+    except Exception:
+        dhurl = f"{request.base_url.scheme}://{request.base_url.netloc}"
+
     cookies = request.cookies
 
     try:
@@ -1367,16 +1390,18 @@ async def purl2comp(request: Request, response: Response):
 
     dhurl = f"{request.base_url.scheme}://{request.base_url.netloc}".replace("http:", "https:")
 
-    resp = requests.head(dhurl, timeout=1)
+    try:
+        resp = requests.head(dhurl, timeout=1)
 
-    if resp is None or resp.status_code != 200:
-       dhurl = f"{request.base_url.scheme}://{request.base_url.netloc}"
+        if resp is None or resp.status_code != 200:
+            dhurl = f"{request.base_url.scheme}://{request.base_url.netloc}"
+    except Exception:
+        dhurl = f"{request.base_url.scheme}://{request.base_url.netloc}"
 
     # dhurl = "http://localhost:8181"
     cookies = request.cookies
 
     pprint(dhurl)
-    pprint(cookies)
 
     try:
         result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies, timeout=5)
