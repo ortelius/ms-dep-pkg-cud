@@ -24,6 +24,7 @@ import tempfile
 import threading
 import urllib.parse
 from time import sleep
+from pprint import pprint
 
 import requests
 import uvicorn
@@ -1366,6 +1367,9 @@ async def purl2comp(request: Request, response: Response):
     dhurl = f"{request.base_url.scheme}://{request.base_url.netloc}"
     # dhurl = "http://localhost:8181"
     cookies = request.cookies
+
+    pprint(dhurl)
+    pprint(cookies)
 
     try:
         result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies, timeout=5)
