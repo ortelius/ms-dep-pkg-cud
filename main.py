@@ -754,6 +754,7 @@ def get_commit_sha(repo_url, package_version):
 
         repo_url = repo_url.replace("http://github.com", "https://github.com")
         repo_url = repo_url.replace("git://github.com", "https://github.com")
+        repo_url = repo_url.replace("git+https://", "https://github.com")
         repo_url = repo_url.replace("git+ssh://git@", "https://")
         repo_url = repo_url.replace("git+", "")
 
