@@ -11,42 +11,244 @@
 
 
 ![Discord](https://img.shields.io/discord/722468819091849316)
-Dependency Package Data Microservice - Create, Update and Delete
 
-HELM_CHART
+> Version 10.0.0
 
-- port:8080
-- package name : deppkg
+RestAPI endpoint for adding SBOM data to a component
 
-postgress [test database docker image](https://github.com/ortelius/test-database)
-Pull and run the above image
+## Path Table
 
-Create Table [Componentdep SQL Query](https://github.com/ortelius/ortelius/blob/main/dmadminweb/WebContent/WEB-INF/schema/2021122706.sql)
+| Method | Path | Description |
+| --- | --- | --- |
+| GET | [/health](#gethealth) | Health |
+| GET | [/msapi/deppkg](#getmsapideppkg) | Sbom Type |
+| POST | [/msapi/deppkg/cyclonedx](#postmsapideppkgcyclonedx) | Cyclonedx |
+| POST | [/msapi/deppkg/spdx](#postmsapideppkgspdx) | Spdx |
+| POST | [/msapi/deppkg/safety](#postmsapideppkgsafety) | Safety |
+| POST | [/msapi/purl2comp](#postmsapipurl2comp) | Purl2Comp |
 
-Microservice
+## Reference Table
 
-- url: localhost:5000/msapi/deppkg
+| Name | Path | Description |
+| --- | --- | --- |
+| HTTPValidationError | [#/components/schemas/HTTPValidationError](#componentsschemashttpvalidationerror) |  |
+| StatusMsg | [#/components/schemas/StatusMsg](#componentsschemasstatusmsg) |  |
+| ValidationError | [#/components/schemas/ValidationError](#componentsschemasvalidationerror) |  |
 
-methods:
+## Path Details
 
-- POST
+***
 
-  sample call:
+### [GET]/health
 
-   ```bash
-   curl -X POST - -H "Content-Type: application/json" -d @FILENAME DESTINATION http://localhost:5000/msapi/deppkg?compid=1234
-   ```
+- Summary  
+Health
 
-- DELETE
+- Description  
+This health check end point used by Kubernetes
 
-  Deletes component by component id passed as query Parameter
+#### Responses
 
-  sample call:
+- 200 Successful Response
 
-  ```bash
-  curl -X DELETE localhost:5000/msapi/compitem?comp_id=1
-  ```
+`application/json`
 
-## Fixed CVEs
+```ts
+{
+  status?: string
+  service_name?: string
+}
+```
 
-- 2/27/23 - [CVE-2023-25139](https://www.openwall.com/lists/oss-security/2023/02/10/1)
+***
+
+### [GET]/msapi/deppkg
+
+- Summary  
+Sbom Type
+
+- Description  
+This is the end point used determine the type of SBOM format this microservice can handle
+
+#### Responses
+
+- 200 Successful Response
+
+`application/json`
+
+```ts
+{}
+```
+
+***
+
+### [POST]/msapi/deppkg/cyclonedx
+
+- Summary  
+Cyclonedx
+
+- Description  
+This is the end point used to upload a CycloneDX SBOM
+
+#### Parameters(Query)
+
+```ts
+compid: integer
+```
+
+#### Responses
+
+- 200 Successful Response
+
+`application/json`
+
+```ts
+{}
+```
+
+- 422 Validation Error
+
+`application/json`
+
+```ts
+{
+  detail: {
+    loc?: Partial(string) & Partial(integer)[]
+    msg: string
+    type: string
+  }[]
+}
+```
+
+***
+
+### [POST]/msapi/deppkg/spdx
+
+- Summary  
+Spdx
+
+- Description  
+This is the end point used to upload a SPDX SBOM
+
+#### Parameters(Query)
+
+```ts
+compid: integer
+```
+
+#### Responses
+
+- 200 Successful Response
+
+`application/json`
+
+```ts
+{}
+```
+
+- 422 Validation Error
+
+`application/json`
+
+```ts
+{
+  detail: {
+    loc?: Partial(string) & Partial(integer)[]
+    msg: string
+    type: string
+  }[]
+}
+```
+
+***
+
+### [POST]/msapi/deppkg/safety
+
+- Summary  
+Safety
+
+- Description  
+This is the end point used to upload a Python Safety SBOM
+
+#### Parameters(Query)
+
+```ts
+compid: integer
+```
+
+#### Responses
+
+- 200 Successful Response
+
+`application/json`
+
+```ts
+{}
+```
+
+- 422 Validation Error
+
+`application/json`
+
+```ts
+{
+  detail: {
+    loc?: Partial(string) & Partial(integer)[]
+    msg: string
+    type: string
+  }[]
+}
+```
+
+***
+
+### [POST]/msapi/purl2comp
+
+- Summary  
+Purl2Comp
+
+- Description  
+This is the end point used to create a component from a purl
+
+#### Responses
+
+- 200 Successful Response
+
+`application/json`
+
+```ts
+{}
+```
+
+## References
+
+### #/components/schemas/HTTPValidationError
+
+```ts
+{
+  detail: {
+    loc?: Partial(string) & Partial(integer)[]
+    msg: string
+    type: string
+  }[]
+}
+```
+
+### #/components/schemas/StatusMsg
+
+```ts
+{
+  status?: string
+  service_name?: string
+}
+```
+
+### #/components/schemas/ValidationError
+
+```ts
+{
+  loc?: Partial(string) & Partial(integer)[]
+  msg: string
+  type: string
+}
+```
