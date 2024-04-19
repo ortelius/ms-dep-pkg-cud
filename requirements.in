@@ -8,3 +8,4 @@ certifi==2024.2.2
 cvss==3.1
 defusedxml==0.7.1
 packageurl-python==0.15.0
+idna==3.7
