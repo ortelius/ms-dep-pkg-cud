@@ -14,7 +14,21 @@
 
 > Version 10.0.0
 
+
 RestAPI endpoint for adding SBOM data to a component
+
+![Release](https://img.shields.io/github/v/release/ortelius/ms-dep-pkg-cud?sort=semver)
+![license](https://img.shields.io/github/license/ortelius/ms-dep-pkg-cud)
+
+![Build](https://img.shields.io/github/actions/workflow/status/ortelius/ms-dep-pkg-cud/build-push-chart.yml)
+[![MegaLinter](https://github.com/ortelius/ms-dep-pkg-cud/workflows/MegaLinter/badge.svg?branch=main)](https://github.com/ortelius/ms-dep-pkg-cud/actions?query=workflow%3AMegaLinter+branch%3Amain)
+![CodeQL](https://github.com/ortelius/ms-dep-pkg-cud/workflows/CodeQL/badge.svg)
+[![OpenSSF
+-Scorecard](https://api.securityscorecards.dev/projects/github.com/ortelius/ms-dep-pkg-cud/badge)](https://api.securityscorecards.dev/projects/github.com/ortelius/ms-dep-pkg-cud)
+
+
+![Discord](https://img.shields.io/discord/722468819091849316)
+
 
 ## Path Table
 
