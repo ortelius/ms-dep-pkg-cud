@@ -1,7 +1,7 @@
 # ortelius-ms-dep-pkg-cud
 
 ![Release](https://img.shields.io/github/v/release/ortelius/ms-dep-pkg-cud?sort=semver)
-![license](https://img.shields.io/github/license/ortelius/ms-dep-pkg-cud)
+![license](https://img.shields.io/github/license/ortelius/.github)
 
 ![Build](https://img.shields.io/github/actions/workflow/status/ortelius/ms-dep-pkg-cud/build-push-chart.yml)
 [![MegaLinter](https://github.com/ortelius/ms-dep-pkg-cud/workflows/MegaLinter/badge.svg?branch=main)](https://github.com/ortelius/ms-dep-pkg-cud/actions?query=workflow%3AMegaLinter+branch%3Amain)
@@ -18,7 +18,7 @@
 RestAPI endpoint for adding SBOM data to a component
 
 ![Release](https://img.shields.io/github/v/release/ortelius/ms-dep-pkg-cud?sort=semver)
-![license](https://img.shields.io/github/license/ortelius/ms-dep-pkg-cud)
+![license](https://img.shields.io/github/license/ortelius/.github)
 
 ![Build](https://img.shields.io/github/actions/workflow/status/ortelius/ms-dep-pkg-cud/build-push-chart.yml)
 [![MegaLinter](https://github.com/ortelius/ms-dep-pkg-cud/workflows/MegaLinter/badge.svg?branch=main)](https://github.com/ortelius/ms-dep-pkg-cud/actions?query=workflow%3AMegaLinter+branch%3Amain)
@@ -55,10 +55,10 @@ RestAPI endpoint for adding SBOM data to a component
 
 ### [GET]/health
 
-- Summary  
+- Summary
 Health
 
-- Description  
+- Description
 This health check end point used by Kubernetes
 
 #### Responses
@@ -78,10 +78,10 @@ This health check end point used by Kubernetes
 
 ### [GET]/msapi/deppkg
 
-- Summary  
+- Summary
 Sbom Type
 
-- Description  
+- Description
 This is the end point used determine the type of SBOM format this microservice can handle
 
 #### Responses
@@ -98,10 +98,10 @@ This is the end point used determine the type of SBOM format this microservice c
 
 ### [POST]/msapi/deppkg/cyclonedx
 
-- Summary  
+- Summary
 Cyclonedx
 
-- Description  
+- Description
 This is the end point used to upload a CycloneDX SBOM
 
 #### Parameters(Query)
@@ -138,10 +138,10 @@ compid: integer
 
 ### [POST]/msapi/deppkg/spdx
 
-- Summary  
+- Summary
 Spdx
 
-- Description  
+- Description
 This is the end point used to upload a SPDX SBOM
 
 #### Parameters(Query)
@@ -178,10 +178,10 @@ compid: integer
 
 ### [POST]/msapi/deppkg/safety
 
-- Summary  
+- Summary
 Safety
 
-- Description  
+- Description
 This is the end point used to upload a Python Safety SBOM
 
 #### Parameters(Query)
@@ -218,10 +218,10 @@ compid: integer
 
 ### [POST]/msapi/purl2comp
 
-- Summary  
+- Summary
 Purl2Comp
 
-- Description  
+- Description
 This is the end point used to create a component from a purl
 
 #### Responses
