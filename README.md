@@ -32,22 +32,22 @@ RestAPI endpoint for adding SBOM data to a component
 
 ## Path Table
 
-| Method | Path | Description |
-| --- | --- | --- |
-| GET | [/health](#gethealth) | Health |
-| GET | [/msapi/deppkg](#getmsapideppkg) | Sbom Type |
-| POST | [/msapi/deppkg/cyclonedx](#postmsapideppkgcyclonedx) | Cyclonedx |
-| POST | [/msapi/deppkg/spdx](#postmsapideppkgspdx) | Spdx |
-| POST | [/msapi/deppkg/safety](#postmsapideppkgsafety) | Safety |
-| POST | [/msapi/purl2comp](#postmsapipurl2comp) | Purl2Comp |
+| Method | Path                                                 | Description |
+|--------|------------------------------------------------------|-------------|
+| GET    | [/health](#gethealth)                                | Health      |
+| GET    | [/msapi/deppkg](#getmsapideppkg)                     | Sbom Type   |
+| POST   | [/msapi/deppkg/cyclonedx](#postmsapideppkgcyclonedx) | Cyclonedx   |
+| POST   | [/msapi/deppkg/spdx](#postmsapideppkgspdx)           | Spdx        |
+| POST   | [/msapi/deppkg/safety](#postmsapideppkgsafety)       | Safety      |
+| POST   | [/msapi/purl2comp](#postmsapipurl2comp)              | Purl2Comp   |
 
 ## Reference Table
 
-| Name | Path | Description |
-| --- | --- | --- |
-| HTTPValidationError | [#/components/schemas/HTTPValidationError](#componentsschemashttpvalidationerror) |  |
-| StatusMsg | [#/components/schemas/StatusMsg](#componentsschemasstatusmsg) |  |
-| ValidationError | [#/components/schemas/ValidationError](#componentsschemasvalidationerror) |  |
+| Name                | Path                                                                              | Description |
+|---------------------|-----------------------------------------------------------------------------------|-------------|
+| HTTPValidationError | [#/components/schemas/HTTPValidationError](#componentsschemashttpvalidationerror) |             |
+| StatusMsg           | [#/components/schemas/StatusMsg](#componentsschemasstatusmsg)                     |             |
+| ValidationError     | [#/components/schemas/ValidationError](#componentsschemasvalidationerror)         |             |
 
 ## Path Details
 
@@ -55,10 +55,10 @@ RestAPI endpoint for adding SBOM data to a component
 
 ### [GET]/health
 
-- Summary  
+- Summary
 Health
 
-- Description  
+- Description
 This health check end point used by Kubernetes
 
 #### Responses
@@ -78,10 +78,10 @@ This health check end point used by Kubernetes
 
 ### [GET]/msapi/deppkg
 
-- Summary  
+- Summary
 Sbom Type
 
-- Description  
+- Description
 This is the end point used determine the type of SBOM format this microservice can handle
 
 #### Responses
@@ -98,10 +98,10 @@ This is the end point used determine the type of SBOM format this microservice c
 
 ### [POST]/msapi/deppkg/cyclonedx
 
-- Summary  
+- Summary
 Cyclonedx
 
-- Description  
+- Description
 This is the end point used to upload a CycloneDX SBOM
 
 #### Parameters(Query)
@@ -138,10 +138,10 @@ compid: integer
 
 ### [POST]/msapi/deppkg/spdx
 
-- Summary  
+- Summary
 Spdx
 
-- Description  
+- Description
 This is the end point used to upload a SPDX SBOM
 
 #### Parameters(Query)
@@ -178,10 +178,10 @@ compid: integer
 
 ### [POST]/msapi/deppkg/safety
 
-- Summary  
+- Summary
 Safety
 
-- Description  
+- Description
 This is the end point used to upload a Python Safety SBOM
 
 #### Parameters(Query)
@@ -218,10 +218,10 @@ compid: integer
 
 ### [POST]/msapi/purl2comp
 
-- Summary  
+- Summary
 Purl2Comp
 
-- Description  
+- Description
 This is the end point used to create a component from a purl
 
 #### Responses

@@ -64,9 +64,7 @@ tags_metadata = [
 dhurl = ""
 cookies = {}  # type: ignore
 
-warnings.filterwarnings(
-    "ignore", message="Invalid HTTP request received", category=UserWarning
-)
+warnings.filterwarnings("ignore", message="Invalid HTTP request received", category=UserWarning)
 
 desc = """
 RestAPI endpoint for adding SBOM data to a component
@@ -115,11 +113,12 @@ safety_db = None
 if len(validateuser_url) == 0:
     validateuser_host = os.getenv("MS_VALIDATE_USER_SERVICE_HOST", "127.0.0.1")
     host = socket.gethostbyaddr(validateuser_host)[0]
-    validateuser_url = (
-        "http://" + host + ":" + str(os.getenv("MS_VALIDATE_USER_SERVICE_PORT", "80"))
-    )
+    validateuser_url = "http://" + host + ":" + str(os.getenv("MS_VALIDATE_USER_SERVICE_PORT", "80"))
 
-engine = create_engine( "postgresql+psycopg2://" + db_user + ":" + db_pass + "@" + db_host + ":" + db_port + "/" + db_name, pool_pre_ping=True, )
+engine = create_engine(
+    "postgresql+psycopg2://" + db_user + ":" + db_pass + "@" + db_host + ":" + db_port + "/" + db_name,
+    pool_pre_ping=True,
+)
 
 
 def is_empty(my_string):
@@ -243,22 +242,13 @@ def get_component(dhurl, cookies, compname, compvariant, compversion, id_only, l
     compvariant = clean_name(compvariant)
     compversion = clean_name(compversion)
 
-    if (
-        (compvariant == "" or compvariant is None)
-        and compversion is not None
-        and compversion != ""
-    ):
+    if (compvariant == "" or compvariant is None) and compversion is not None and compversion != "":
         compvariant = compversion
         compversion = None
 
     component = ""
 
-    if (
-        compvariant is not None
-        and compvariant != ""
-        and compversion is not None
-        and compversion != ""
-    ):
+    if compvariant is not None and compvariant != "" and compversion is not None and compversion != "":
         component = compname + ";" + compvariant + ";" + compversion
     elif compvariant is not None and compvariant != "":
         component = compname + ";" + compvariant
@@ -271,12 +261,7 @@ def get_component(dhurl, cookies, compname, compvariant, compversion, id_only, l
     if "." in compname:
         short_compname = compname.split(".")[-1]
 
-    if (
-        compvariant is not None
-        and compvariant != ""
-        and compversion is not None
-        and compversion != ""
-    ):
+    if compvariant is not None and compvariant != "" and compversion is not None and compversion != "":
         check_compname = short_compname + ";" + compvariant + ";" + compversion
     elif compvariant is not None and compvariant != "":
         check_compname = short_compname + ";" + compvariant
@@ -291,10 +276,7 @@ def get_component(dhurl, cookies, compname, compvariant, compversion, id_only, l
         param = param + "&latest=Y"
 
     data = get_json(
-        dhurl
-        + "/dmadminweb/API/component/?name="
-        + urllib.parse.quote(component)
-        + param,
+        dhurl + "/dmadminweb/API/component/?name=" + urllib.parse.quote(component) + param,
         cookies,
     )
 
@@ -346,11 +328,7 @@ def new_component_version(
     compvariant = clean_name(compvariant)
     compversion = clean_name(compversion)
 
-    if (
-        (compvariant == "" or compvariant is None)
-        and compversion is not None
-        and compversion != ""
-    ):
+    if (compvariant == "" or compvariant is None) and compversion is not None and compversion != "":
         compvariant = compversion
         compversion = None
 
@@ -360,9 +338,7 @@ def new_component_version(
         compversion = compversion.rstrip(";")
 
     # Get latest version of compnent variant
-    data = get_component(
-        dhurl, cookies, compname, compvariant, compversion, False, True
-    )
+    data = get_component(dhurl, cookies, compname, compvariant, compversion, False, True)
     if data[0] == -1:
         data = get_component(dhurl, cookies, compname, compvariant, None, False, True)
         if data[0] == -1:
@@ -378,12 +354,7 @@ def new_component_version(
     if "." in compname:
         short_compname = compname.split(".")[-1]
 
-    if (
-        compvariant is not None
-        and compvariant != ""
-        and compversion is not None
-        and compversion != ""
-    ):
+    if compvariant is not None and compvariant != "" and compversion is not None and compversion != "":
         check_compname = short_compname + ";" + compvariant + ";" + compversion
     elif compvariant is not None and compvariant != "":
         check_compname = short_compname + ";" + compvariant
@@ -401,21 +372,15 @@ def new_component_version(
 
     if latest_compid < 0:
         if kind.lower() == "docker":
-            compid = new_docker_component(
-                dhurl, cookies, compname, compvariant, compversion, -1
-            )
+            compid = new_docker_component(dhurl, cookies, compname, compvariant, compversion, -1)
         else:
-            compid = new_file_component(
-                dhurl, cookies, compname, compvariant, compversion, -1, None
-            )
+            compid = new_file_component(dhurl, cookies, compname, compvariant, compversion, -1, None)
     else:
         # Create component items for the component
         if compautoinc is None:
             if found_compname == "" or found_compname != check_compname:
                 if kind.lower() == "docker":
-                    compid = new_docker_component(
-                        dhurl, cookies, compname, compvariant, compversion, compid
-                    )
+                    compid = new_docker_component(dhurl, cookies, compname, compvariant, compversion, compid)
                 else:
                     compid = new_file_component(
                         dhurl,
@@ -435,9 +400,7 @@ def new_component_version(
     return compid
 
 
-def new_docker_component(
-    dhurl, cookies, compname, compvariant, compversion, parent_compid
-):
+def new_docker_component(dhurl, cookies, compname, compvariant, compversion, parent_compid):
     """
     Create a new docker component.
 
@@ -454,11 +417,7 @@ def new_docker_component(
     compvariant = clean_name(compvariant)
     compversion = clean_name(compversion)
 
-    if (
-        (compvariant is None or compvariant == "")
-        and compversion is not None
-        and compversion != ""
-    ):
+    if (compvariant is None or compvariant == "") and compversion is not None and compversion != "":
         compvariant = compversion
         compversion = None
 
@@ -467,25 +426,19 @@ def new_docker_component(
     if parent_compid < 0:
         if is_empty(compvariant):
             data = get_json(
-                dhurl
-                + "/dmadminweb/API/new/compver/?name="
-                + urllib.parse.quote(compname),
+                dhurl + "/dmadminweb/API/new/compver/?name=" + urllib.parse.quote(compname),
                 cookies,
             )
         else:
             data = get_json(
-                dhurl
-                + "/dmadminweb/API/new/compver/?name="
-                + urllib.parse.quote(compname + ";" + compvariant),
+                dhurl + "/dmadminweb/API/new/compver/?name=" + urllib.parse.quote(compname + ";" + compvariant),
                 cookies,
             )
         if data is not None:
             result = data.get("result", {})
             compid = int(result.get("id", "0"))
     else:
-        data = get_json(
-            dhurl + "/dmadminweb/API/new/compver/" + str(parent_compid), cookies
-        )
+        data = get_json(dhurl + "/dmadminweb/API/new/compver/" + str(parent_compid), cookies)
         if data is not None:
             if data is not None:
                 result = data.get("result", {})
@@ -498,9 +451,7 @@ def new_docker_component(
     return compid
 
 
-def new_file_component(
-    dhurl, cookies, compname, compvariant, compversion, parent_compid, component_items
-):
+def new_file_component(dhurl, cookies, compname, compvariant, compversion, parent_compid, component_items):
     """
     Create a new file component.
 
@@ -518,11 +469,7 @@ def new_file_component(
     compvariant = clean_name(compvariant)
     compversion = clean_name(compversion)
 
-    if (
-        (compvariant is None or compvariant == "")
-        and compversion is not None
-        and compversion != ""
-    ):
+    if (compvariant is None or compvariant == "") and compversion is not None and compversion != "":
         compvariant = compversion
         compversion = None
 
@@ -532,16 +479,12 @@ def new_file_component(
     if parent_compid < 0:
         if is_empty(compvariant):
             data = get_json(
-                dhurl
-                + "/dmadminweb/API/new/compver/?name="
-                + urllib.parse.quote(compname),
+                dhurl + "/dmadminweb/API/new/compver/?name=" + urllib.parse.quote(compname),
                 cookies,
             )
         else:
             data = get_json(
-                dhurl
-                + "/dmadminweb/API/new/compver/?name="
-                + urllib.parse.quote(compname + ";" + compvariant),
+                dhurl + "/dmadminweb/API/new/compver/?name=" + urllib.parse.quote(compname + ";" + compvariant),
                 cookies,
             )
         if data is not None:
@@ -549,9 +492,7 @@ def new_file_component(
                 result = data.get("result", {})
                 compid = int(result.get("id", "0"))
     else:
-        data = get_json(
-            dhurl + "/dmadminweb/API/new/compver/" + str(parent_compid), cookies
-        )
+        data = get_json(dhurl + "/dmadminweb/API/new/compver/" + str(parent_compid), cookies)
         if data is not None:
             if data is not None:
                 result = data.get("result", {})
@@ -581,12 +522,7 @@ def new_component_item(dhurl, cookies, compid, kind, component_items):
     # Get compId
     if kind.lower() == "docker" or component_items is None:
         data = get_json(
-            dhurl
-            + "/dmadminweb/UpdateAttrs?f=inv&c="
-            + str(compid)
-            + "&xpos=100&ypos=100&kind="
-            + kind
-            + "&removeall=Y",
+            dhurl + "/dmadminweb/UpdateAttrs?f=inv&c=" + str(compid) + "&xpos=100&ypos=100&kind=" + kind + "&removeall=Y",
             cookies,
         )
     else:
@@ -602,28 +538,13 @@ def new_component_item(dhurl, cookies, compid, kind, component_items):
                 if entry["key"].lower() == "name":
                     ciname = entry["value"]
                 else:
-                    tmpstr = (
-                        tmpstr
-                        + "&"
-                        + urllib.parse.quote(entry["key"])
-                        + "="
-                        + urllib.parse.quote(entry["value"])
-                    )
+                    tmpstr = tmpstr + "&" + urllib.parse.quote(entry["key"]) + "=" + urllib.parse.quote(entry["value"])
 
             if i == 0:
                 tmpstr = tmpstr + "&removeall=Y"
 
             data = get_json(
-                dhurl
-                + "/dmadminweb/API/new/compitem/"
-                + urllib.parse.quote(ciname)
-                + "?component="
-                + str(compid)
-                + "&xpos=100&ypos="
-                + str(ypos)
-                + "&kind="
-                + kind
-                + tmpstr,
+                dhurl + "/dmadminweb/API/new/compitem/" + urllib.parse.quote(ciname) + "?component=" + str(compid) + "&xpos=100&ypos=" + str(ypos) + "&kind=" + kind + tmpstr,
                 cookies,
             )
 
@@ -633,13 +554,7 @@ def new_component_item(dhurl, cookies, compid, kind, component_items):
                     workid = result.get("id", -1)
                     if parent_item > 0:
                         get_json(
-                            dhurl
-                            + "/dmadminweb/UpdateAttrs?f=iad&c="
-                            + str(compid)
-                            + "&fn="
-                            + str(parent_item)
-                            + "&tn="
-                            + str(workid),
+                            dhurl + "/dmadminweb/UpdateAttrs?f=iad&c=" + str(compid) + "&fn=" + str(parent_item) + "&tn=" + str(workid),
                             cookies,
                         )
                     parent_item = workid
@@ -692,56 +607,33 @@ def update_name(dhurl, cookies, compname, compvariant, compversion, compid):
     compvariant = clean_name(compvariant)
     compversion = clean_name(compversion)
 
-    if (
-        (compvariant is None or compvariant == "")
-        and compversion is not None
-        and compversion != ""
-    ):
+    if (compvariant is None or compvariant == "") and compversion is not None and compversion != "":
         compvariant = compversion
         compversion = None
 
     if "." in compname:
         compname = compname.split(".")[-1]
 
-    if (
-        compvariant is not None
-        and compvariant != ""
-        and compversion is not None
-        and compversion != ""
-    ):
+    if compvariant is not None and compvariant != "" and compversion is not None and compversion != "":
         data = get_json(
-            dhurl
-            + "/dmadminweb/UpdateSummaryData?objtype=23&id="
-            + str(compid)
-            + "&change_1="
-            + urllib.parse.quote(compname + ";" + compvariant + ";" + compversion),
+            dhurl + "/dmadminweb/UpdateSummaryData?objtype=23&id=" + str(compid) + "&change_1=" + urllib.parse.quote(compname + ";" + compvariant + ";" + compversion),
             cookies,
         )
     elif compvariant is not None and compvariant != "":
         data = get_json(
-            dhurl
-            + "/dmadminweb/UpdateSummaryData?objtype=23&id="
-            + str(compid)
-            + "&change_1="
-            + urllib.parse.quote(compname + ";" + compvariant),
+            dhurl + "/dmadminweb/UpdateSummaryData?objtype=23&id=" + str(compid) + "&change_1=" + urllib.parse.quote(compname + ";" + compvariant),
             cookies,
         )
     else:
         data = get_json(
-            dhurl
-            + "/dmadminweb/UpdateSummaryData?objtype=23&id="
-            + str(compid)
-            + "&change_1="
-            + urllib.parse.quote(compname),
+            dhurl + "/dmadminweb/UpdateSummaryData?objtype=23&id=" + str(compid) + "&change_1=" + urllib.parse.quote(compname),
             cookies,
         )
 
     return data
 
 
-def new_component(
-    dhurl, cookies, compname, compvariant, compversion, kind, parent_compid
-):
+def new_component(dhurl, cookies, compname, compvariant, compversion, kind, parent_compid):
     """
     Create the component object based on the component name and variant.
 
@@ -762,9 +654,7 @@ def new_component(
     # Create base version
     if parent_compid is None:
         data = get_json(
-            dhurl
-            + "/dmadminweb/API/new/compver/?name="
-            + urllib.parse.quote(compname + ";" + compvariant),
+            dhurl + "/dmadminweb/API/new/compver/?name=" + urllib.parse.quote(compname + ";" + compvariant),
             cookies,
         )
         if data is not None:
@@ -772,9 +662,7 @@ def new_component(
                 result = data.get("result", {})
                 compid = int(result.get("id", -1))
     else:
-        data = get_json(
-            dhurl + "/dmadminweb/API/new/compver/" + str(parent_compid), cookies
-        )
+        data = get_json(dhurl + "/dmadminweb/API/new/compver/" + str(parent_compid), cookies)
         if data is not None:
             if data is not None:
                 result = data.get("result", {})
@@ -800,9 +688,7 @@ def get_component_name(dhurl, cookies, compid):
         string: full name of the component
     """
     name = ""
-    data = get_json(
-        dhurl + "/dmadminweb/API/component/" + str(compid) + "?idonly=Y", cookies
-    )
+    data = get_json(dhurl + "/dmadminweb/API/component/" + str(compid) + "?idonly=Y", cookies)
 
     if data is None:
         return name
@@ -828,9 +714,7 @@ def update_component_attrs(dhurl, cookies, compname, compvariant, compversion, a
         list: [True for success, otherwise False, json string of update, url for update].
     """
     # Get latest version of compnent variant
-    data = get_component(
-        dhurl, cookies, compname, compvariant, compversion, True, False
-    )
+    data = get_component(dhurl, cookies, compname, compvariant, compversion, True, False)
     compid = data[0]
 
     if compid < 0:
@@ -838,9 +722,7 @@ def update_component_attrs(dhurl, cookies, compname, compvariant, compversion, a
 
     payload = json.dumps(attrs)
 
-    data = post_json(
-        dhurl + "/dmadminweb/API/setvar/component/" + str(compid), payload, cookies
-    )
+    data = post_json(dhurl + "/dmadminweb/API/setvar/component/" + str(compid), payload, cookies)
     if data is None:
         return [False, "Could not update attributes on '" + compname + "'"]
 
@@ -857,25 +739,16 @@ def create_compver(dhurl, cookies, purl):
     if purl_parts.namespace is None:
         domain = "GLOBAL.Open Source." + purl_parts.type
     else:
-        domain = (
-            "GLOBAL.Open Source."
-            + purl_parts.type
-            + "."
-            + purl_parts.namespace.replace(".", "_")
-        )
+        domain = "GLOBAL.Open Source." + purl_parts.type + "." + purl_parts.namespace.replace(".", "_")
 
-    domain = (
-        domain.replace("/", ".").replace("-", "_").replace("+", "_").replace("@", "")
-    )
+    domain = domain.replace("/", ".").replace("-", "_").replace("+", "_").replace("@", "")
 
     compname = ""
     version = ""
     if purl_parts.version is None:
         compname = clean_name(purl_parts.name.replace(".", "_"))
     else:
-        compname = clean_name(
-            purl_parts.name.replace(".", "_") + ";" + purl_parts.version
-        )
+        compname = clean_name(purl_parts.name.replace(".", "_") + ";" + purl_parts.version)
         version = clean_name(purl_parts.version)
 
     package = clean_name(purl_parts.name).replace(".", "_")
@@ -922,9 +795,7 @@ def create_compver(dhurl, cookies, purl):
                 if "." in shortname:
                     shortname = shortname.split(".")[-1]
 
-                compid = new_component_version(
-                    dhurl, cookies, compname, compversion, "", kind, None, compautoinc
-                )
+                compid = new_component_version(dhurl, cookies, compname, compversion, "", kind, None, compautoinc)
                 compname = get_component_name(dhurl, cookies, compid)
                 compversion = ""
                 compvariant = ""
@@ -953,12 +824,7 @@ def create_compver(dhurl, cookies, purl):
 
                 if giturl is not None and giturl != "":
                     giturl = giturl.replace(".git", "")
-                    path_segments = (
-                        giturl.strip("/")
-                        .replace("https://", "")
-                        .replace("http://", "")
-                        .split("/")
-                    )
+                    path_segments = giturl.strip("/").replace("https://", "").replace("http://", "").split("/")
                     # Extract org and repo from the path segments
                     if len(path_segments) >= 3:
                         org = path_segments[1]
@@ -972,9 +838,7 @@ def create_compver(dhurl, cookies, purl):
                     if purl_parts.version is not None:
                         attrs["GitTag"] = purl_parts.version
 
-                    data = update_component_attrs(
-                        dhurl, cookies, compname, compvariant, compversion, attrs
-                    )
+                    data = update_component_attrs(dhurl, cookies, compname, compvariant, compversion, attrs)
                     print("Attribute Update Done")
                     return
     except Exception as err:
@@ -1059,29 +923,19 @@ def get_deb_info(package_name, version):
         return "", None
 
     if "git://git.debian.org/git" in repo_url:
-        repo_url = repo_url.replace(
-            "git://git.debian.org/git", "https://salsa.debian.org"
-        ).replace(".git", "")
+        repo_url = repo_url.replace("git://git.debian.org/git", "https://salsa.debian.org").replace(".git", "")
 
     if "git://git.debian.org/users" in repo_url:
-        repo_url = repo_url.replace(
-            "git://git.debian.org/users", "https://salsa.debian.org"
-        ).replace(".git", "")
+        repo_url = repo_url.replace("git://git.debian.org/users", "https://salsa.debian.org").replace(".git", "")
 
     if "git://anonscm.debian.org/users" in repo_url:
-        repo_url = repo_url.replace(
-            "git://anonscm.debian.org/users", "https://salsa.debian.org"
-        ).replace(".git", "")
+        repo_url = repo_url.replace("git://anonscm.debian.org/users", "https://salsa.debian.org").replace(".git", "")
 
     if "git://git.debian.org" in repo_url:
-        repo_url = repo_url.replace(
-            "git://git.debian.org", "https://salsa.debian.org"
-        ).replace(".git", "")
+        repo_url = repo_url.replace("git://git.debian.org", "https://salsa.debian.org").replace(".git", "")
 
     if "git://anonscm.debian.org" in repo_url:
-        repo_url = repo_url.replace(
-            "git://anonscm.debian.org", "https://salsa.debian.org"
-        ).replace(".git", "")
+        repo_url = repo_url.replace("git://anonscm.debian.org", "https://salsa.debian.org").replace(".git", "")
 
     # Define the pattern to match "pkg-*"
     pattern = re.compile(r"pkg-(\w+)")
@@ -1134,9 +988,7 @@ def get_golang_info(domain, module_name, version):
 
 
 def get_java_info(group, artifact, version):
-    url = (
-        url
-    ) = f'https://repo1.maven.org/maven2/{group.replace(".", "/")}/{artifact}/{version}/{artifact}-{version}.pom'
+    url = url = f'https://repo1.maven.org/maven2/{group.replace(".", "/")}/{artifact}/{version}/{artifact}-{version}.pom'
 
     response = requests.get(url, timeout=2)
     if response.status_code != 200:
@@ -1169,9 +1021,7 @@ def get_rust_info(crate_name, version):
     return repo_url, commit_sha
 
 
-def getCommitFromPurl(
-    package_type, package_namespace, package_name, package_version, purl
-):
+def getCommitFromPurl(package_type, package_namespace, package_name, package_version, purl):
     repo_url = None
     commit_sha = None
 
@@ -1182,13 +1032,9 @@ def getCommitFromPurl(
     elif package_type == "npm":
         repo_url, commit_sha = get_npm_info(package_name, package_version)
     elif package_type == "golang":
-        repo_url, commit_sha = get_golang_info(
-            package_namespace, package_name, package_version
-        )
+        repo_url, commit_sha = get_golang_info(package_namespace, package_name, package_version)
     elif package_type == "maven":
-        repo_url, commit_sha = get_java_info(
-            package_namespace, package_name, package_version
-        )
+        repo_url, commit_sha = get_java_info(package_namespace, package_name, package_version)
     elif package_type == "cargo":
         repo_url, commit_sha = get_rust_info(package_name, package_version)
     elif package_type == "deb":
@@ -1228,9 +1074,7 @@ def get_vulns(payload):
     vulns = []
     url = "https://api.osv.dev/v1/query"
     try:
-        response = requests.post(
-            url, json=payload, headers={"Content-Type": "application/json"}, timeout=10
-        )
+        response = requests.post(url, json=payload, headers={"Content-Type": "application/json"}, timeout=10)
         if response.status_code == 200:
             data = response.json()
             if "vulns" in data:
@@ -1373,9 +1217,7 @@ def update_vulns():
                             cursor.execute(sqlstmt, params)
                             conn.commit()
                         except Exception:
-                            print(
-                                f"Duplicate Vuln: {packagename}, {packageversion}, {vulnid}, {desc}, {risklevel}, {cvss}"
-                            )
+                            print(f"Duplicate Vuln: {packagename}, {packageversion}, {vulnid}, {desc}, {risklevel}, {cvss}")
                 return
         except (InterfaceError, OperationalError) as ex:
             if attempt < no_of_retry:
@@ -1443,9 +1285,7 @@ async def cyclonedx(request: Request, response: Response, compid: int):
     global dhurl
     global cookies
 
-    dhurl = f"{request.base_url.scheme}://{request.base_url.netloc}".replace(
-        "http:", "https:"
-    )
+    dhurl = f"{request.base_url.scheme}://{request.base_url.netloc}".replace("http:", "https:")
 
     try:
         resp = requests.head(dhurl, timeout=1)
@@ -1458,13 +1298,9 @@ async def cyclonedx(request: Request, response: Response, compid: int):
     cookies = request.cookies
 
     try:
-        result = requests.get(
-            validateuser_url + "/msapi/validateuser", cookies=request.cookies, timeout=5
-        )
+        result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies, timeout=5)
         if result is None:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed"
-            )
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed")
 
         if result.status_code != status.HTTP_200_OK:
             raise HTTPException(
@@ -1531,9 +1367,7 @@ async def spdx(request: Request, response: Response, compid: int):
     global dhurl
     global cookies
 
-    dhurl = f"{request.base_url.scheme}://{request.base_url.netloc}".replace(
-        "http:", "https:"
-    )
+    dhurl = f"{request.base_url.scheme}://{request.base_url.netloc}".replace("http:", "https:")
 
     try:
         resp = requests.head(dhurl, timeout=1)
@@ -1546,13 +1380,9 @@ async def spdx(request: Request, response: Response, compid: int):
     cookies = request.cookies
 
     try:
-        result = requests.get(
-            validateuser_url + "/msapi/validateuser", cookies=request.cookies, timeout=5
-        )
+        result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies, timeout=5)
         if result is None:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed"
-            )
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed")
 
         if result.status_code != status.HTTP_200_OK:
             raise HTTPException(
@@ -1621,13 +1451,9 @@ async def safety(request: Request, response: Response, compid: int):
     This is the end point used to upload a Python Safety SBOM
     """
     global safety_db  # pylint: disable=W0603
-    result = requests.get(
-        validateuser_url + "/msapi/validateuser", cookies=request.cookies, timeout=5
-    )
+    result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies, timeout=5)
     if result is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed"
-        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed")
 
     if result.status_code != status.HTTP_200_OK:
         raise HTTPException(
@@ -1692,9 +1518,7 @@ def save_components_data(response, compid, bomformat, components_data):
                     cursor = conn.cursor()
 
                     # delete old licenses
-                    sqlstmt = (
-                        "DELETE from dm.dm_componentdeps where compid=%s and deptype=%s"
-                    )
+                    sqlstmt = "DELETE from dm.dm_componentdeps where compid=%s and deptype=%s"
                     params = (
                         compid,
                         bomformat,
@@ -1739,9 +1563,7 @@ def save_components_data(response, compid, bomformat, components_data):
         raise
     except Exception as err:
         print(str(err))
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(err)
-        ) from None
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(err)) from None
 
 
 @app.post("/msapi/purl2comp")
@@ -1753,9 +1575,7 @@ async def purl2comp(request: Request, response: Response):
     global dhurl
     global cookies
 
-    dhurl = f"{request.base_url.scheme}://{request.base_url.netloc}".replace(
-        "http:", "https:"
-    )
+    dhurl = f"{request.base_url.scheme}://{request.base_url.netloc}".replace("http:", "https:")
 
     try:
         resp = requests.head(dhurl, timeout=1)
@@ -1771,13 +1591,9 @@ async def purl2comp(request: Request, response: Response):
     pprint(dhurl)
 
     try:
-        result = requests.get(
-            validateuser_url + "/msapi/validateuser", cookies=request.cookies, timeout=5
-        )
+        result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies, timeout=5)
         if result is None:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed"
-            )
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed")
 
         if result.status_code != status.HTTP_200_OK:
             raise HTTPException(
