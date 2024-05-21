@@ -119,19 +119,7 @@ if len(validateuser_url) == 0:
         "http://" + host + ":" + str(os.getenv("MS_VALIDATE_USER_SERVICE_PORT", "80"))
     )
 
-engine = create_engine(
-    "postgresql+psycopg2://"
-    + db_user
-    + ":"
-    + db_pass
-    + "@"
-    + db_host
-    + ":"
-    + db_port
-    + "/"
-    + db_name,
-    pool_pre_ping=True,
-)
+engine = create_engine( "postgresql+psycopg2://" + db_user + ":" + db_pass + "@" + db_host + ":" + db_port + "/" + db_name, pool_pre_ping=True, )
 
 
 def is_empty(my_string):
