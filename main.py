@@ -961,7 +961,14 @@ def get_pypi_info(package_name, version):
     url = f"https://pypi.org/pypi/{package_name}/{version}/json"
     response = requests.get(url, timeout=2)
     data = response.json()
-    repo_url = data.get("info", {}).get("home_page", "")
+    info = data.get("info", {})
+    project_urls = info.get("project_urls", {})
+
+    repo_url = None
+    for key, value in project_urls.items():
+        if "source" in key.lower():
+            repo_url = value
+            break
     commit_sha = get_commit_sha(repo_url, version)
     return repo_url, commit_sha
 
