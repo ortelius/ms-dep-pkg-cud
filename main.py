@@ -796,51 +796,60 @@ def create_compver(dhurl, cookies, purl):
                     shortname = shortname.split(".")[-1]
 
                 compid = new_component_version(dhurl, cookies, compname, compversion, "", kind, None, compautoinc)
-                compname = get_component_name(dhurl, cookies, compid)
-                compversion = ""
+            else:
                 compvariant = ""
+                compautoinc = None
+                kind = "file"
+                compname = domain + "." + package
+                compversion = version
 
-                print("Creation Done: " + compname)
-                attrs = {}
-                org = ""
-                repo_project = ""
-                gitcommit = None
-                giturl = None
+                compid = get_component(dhurl, cookies, compname, compvariant, compversion, True, False)
 
-                results = getCommitFromPurl(
-                    purl_parts.type,
-                    purl_parts.namespace,
-                    purl_parts.name,
-                    purl_parts.version,
-                    purl,
-                )
+            compname = get_component_name(dhurl, cookies, compid)
+            compversion = ""
+            compvariant = ""
 
-                giturl = results.get("repo_url", None)
-                gitcommit = results.get("commit_sha", None)
+            print("Creation Done: " + compname)
+            attrs = {}
+            org = ""
+            repo_project = ""
+            gitcommit = None
+            giturl = None
 
-                print(f"Purl: {purl}, Url: {giturl}, Commit: {gitcommit}")
-                if gitcommit is not None:
-                    attrs["GitCommit"] = gitcommit
+            results = getCommitFromPurl(
+                purl_parts.type,
+                purl_parts.namespace,
+                purl_parts.name,
+                purl_parts.version,
+                purl,
+            )
 
-                if giturl is not None and giturl != "":
-                    giturl = giturl.replace(".git", "")
-                    path_segments = giturl.strip("/").replace("https://", "").replace("http://", "").split("/")
-                    # Extract org and repo from the path segments
-                    if len(path_segments) >= 3:
-                        org = path_segments[1]
-                        repo_project = path_segments[2]
+            giturl = results.get("repo_url", None)
+            gitcommit = results.get("commit_sha", None)
 
-                    attrs["Purl"] = purl
-                    attrs["GitUrl"] = giturl
-                    attrs["GitOrg"] = org
-                    attrs["GitRepo"] = org + "/" + repo_project
-                    attrs["GitRepoProject"] = repo_project
-                    if purl_parts.version is not None:
-                        attrs["GitTag"] = purl_parts.version
+            print(f"Purl: {purl}, Url: {giturl}, Commit: {gitcommit}")
+            if gitcommit is not None:
+                attrs["GitCommit"] = gitcommit
 
-                    data = update_component_attrs(dhurl, cookies, compname, compvariant, compversion, attrs)
-                    print("Attribute Update Done")
-                    return
+            if giturl is not None and giturl != "":
+                giturl = giturl.replace(".git", "")
+                path_segments = giturl.strip("/").replace("https://", "").replace("http://", "").split("/")
+                # Extract org and repo from the path segments
+                if len(path_segments) >= 3:
+                    org = path_segments[1]
+                    repo_project = path_segments[2]
+
+                attrs["Purl"] = purl
+                attrs["GitUrl"] = giturl
+                attrs["GitOrg"] = org
+                attrs["GitRepo"] = org + "/" + repo_project
+                attrs["GitRepoProject"] = repo_project
+                if purl_parts.version is not None:
+                    attrs["GitTag"] = purl_parts.version
+
+                data = update_component_attrs(dhurl, cookies, compname, compvariant, compversion, attrs)
+                print("Attribute Update Done")
+                return
     except Exception as err:
         print(str(err))
         return
