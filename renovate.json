@@ -22,7 +22,7 @@
     },
     {
       "matchPackageNames": ["pydantic-core"],
-      "enabled": false
+      "allowedVersions": "2.18.4"
     }
   ],
   "separateMajorMinor": false,
