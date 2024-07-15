@@ -397,9 +397,9 @@ orjson==3.10.6 \
     --hash=sha256:fb0ee33124db6eaa517d00890fc1a55c3bfe1cf78ba4a8899d71a06f2d6ff5c7 \
     --hash=sha256:fd502f96bf5ea9a61cbc0b2b5900d0dd68aa0da197179042bdd2be67e51a1e4b
     # via fastapi
-packageurl-python==0.15.3 \
-    --hash=sha256:82e1150f1fc228e25e7b3be1c641ef96b6a0811526c0b4e4f7882a181e862607 \
-    --hash=sha256:96624702032239e70e61b950e14460a5b5f87ac21fc68f119414047b94f0de27
+packageurl-python==0.15.4 \
+    --hash=sha256:4c015634c97f634ff88c9e3916361e4442ef22bd9bf702090a78b427c274e397 \
+    --hash=sha256:9ea4215e2bcd7d2369d0b7857abba7def81f3fa217d7903fc72661c946c75e0f
     # via -r requirements.in
 psycopg2-binary==2.9.9 \
     --hash=sha256:03ef7df18daf2c4c07e2695e8cfd5ee7f748a1d54d802330985a78d2a5a6dca9 \
