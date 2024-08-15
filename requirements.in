@@ -9,3 +9,4 @@ cvss==3.1
 defusedxml==0.7.1
 packageurl-python==0.15.6
 idna==3.7
+starlette==0.37.2
