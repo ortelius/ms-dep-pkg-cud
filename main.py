@@ -1395,22 +1395,6 @@ async def spdx(request: Request, response: Response, compid: int):
 
     cookies = request.cookies
 
-    try:
-        result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies, timeout=5)
-        if result is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed")
-
-        if result.status_code != status.HTTP_200_OK:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Authorization Failed status_code=" + str(result.status_code),
-            )
-    except Exception as err:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authorization Failed:" + str(err),
-        ) from None
-
     spdx_json = await request.json()
     components_data = []
     components = spdx_json.get("packages", [])
@@ -1436,6 +1420,10 @@ async def spdx(request: Request, response: Response, compid: int):
         license_url = ""
         license_name = ""
         current_license = component.get("licenseDeclared")
+
+        if current_license is None:
+            current_license = "NOASSERTION"
+
         if current_license != "NOASSERTION":
             license_name = current_license
             license_url = "https://spdx.org/licenses/" + license_name + ".html"
