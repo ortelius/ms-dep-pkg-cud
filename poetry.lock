@@ -168,13 +168,13 @@ files = [
 
 [[package]]
 name = "cvss"
-version = "3.1"
+version = "3.2"
 description = "CVSS2/3/4 library with interactive calculator for Python 2 and Python 3"
 optional = false
 python-versions = "*"
 files = [
-    {file = "cvss-3.1-py2.py3-none-any.whl", hash = "sha256:092dafc14f9f1c1ac09e25d0d38410e178cf0009479faecff7f585c968f21688"},
-    {file = "cvss-3.1.tar.gz", hash = "sha256:54789edd255d1bc26cc04919f5795e250e9ce2da33b2fc0e8e709f22cb88c5fc"},
+    {file = "cvss-3.2-py2.py3-none-any.whl", hash = "sha256:e2c2fbc8943c6df83d23c7ad74bb9c5e584c666a9455b013b598e292e5018469"},
+    {file = "cvss-3.2.tar.gz", hash = "sha256:5e8e0f95e9e6c9dec0c2ef38f14153b2c019cfcd2fd6e75b5ad7da80a110fa8b"},
 ]
 
 [[package]]
@@ -644,13 +644,13 @@ sqlcipher = ["sqlcipher3_binary"]
 
 [[package]]
 name = "starlette"
-version = "0.38.4"
+version = "0.38.5"
 description = "The little ASGI library that shines."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "starlette-0.38.4-py3-none-any.whl", hash = "sha256:526f53a77f0e43b85f583438aee1a940fd84f8fd610353e8b0c1a77ad8a87e76"},
-    {file = "starlette-0.38.4.tar.gz", hash = "sha256:53a7439060304a208fea17ed407e998f46da5e5d9b1addfea3040094512a6379"},
+    {file = "starlette-0.38.5-py3-none-any.whl", hash = "sha256:632f420a9d13e3ee2a6f18f437b0a9f1faecb0bc42e1942aa2ea0e379a4c4206"},
+    {file = "starlette-0.38.5.tar.gz", hash = "sha256:04a92830a9b6eb1442c766199d62260c3d4dc9c4f9188360626b1e0273cb7077"},
 ]
 
 [package.dependencies]
@@ -719,4 +719,4 @@ standard = ["colorama (>=0.4)", "httptools (>=0.5.0)", "python-dotenv (>=0.13)",
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "323df1ce8094dca887ab7a5828102477e244c23efbb141018b20a9ad18a3613a"
+content-hash = "8be6e47987874c2b5a6f0d024267489dfeb55acc660c05b33c538379de937e72"

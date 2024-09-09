@@ -15,11 +15,11 @@ sqlalchemy = "2.0.34"
 uvicorn = "0.30.6"
 requests = "2.32.3"
 certifi = "2024.8.30"
-cvss = "3.1"
+cvss = "3.2"
 defusedxml = "0.7.1"
 packageurl-python = "0.15.6"
 idna = "3.8"
-starlette = "0.38.4"
+starlette = "0.38.5"
 
 
 [build-system]
