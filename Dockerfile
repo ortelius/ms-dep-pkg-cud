@@ -1,4 +1,4 @@
-FROM cgr.dev/chainguard/python:latest-dev@sha256:4d6f418a5dfad7bb4dd2641b5498d3aa53708073c0e1909fde19cf3568c8aa59 AS builder
+FROM cgr.dev/chainguard/python:latest-dev@sha256:779a791e0569d06c03785d0d130b072aa2bad10e38bbc4203a2923ab2bcef2b0 AS builder
 
 ENV PATH=$PATH:/home/nonroot/.local/bin
 
