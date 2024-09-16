@@ -2,6 +2,17 @@ apiVersion: v1
 entries:
   ms-dep-pkg-cud:
   - apiVersion: v2
+    appVersion: 10.0.1056
+    created: "2024-09-16T19:51:58.263650337Z"
+    description: Dependency Packages
+    digest: b8924d666457c619b0325573e3e46680ccf00425c1421e038718846ac9423566
+    icon: https://ortelius.github.io/ortelius-charts/logo.png
+    name: ms-dep-pkg-cud
+    type: application
+    urls:
+    - https://github.com/ortelius/ms-dep-pkg-cud/releases/download/ms-dep-pkg-cud-10.0.1056/ms-dep-pkg-cud-10.0.1056.tgz
+    version: 10.0.1056
+  - apiVersion: v2
     appVersion: 10.0.1053
     created: "2024-09-16T08:17:49.626081149Z"
     description: Dependency Packages
@@ -4588,4 +4599,4 @@ entries:
     urls:
     - https://github.com/ortelius/ortelius-ms-dep-pkg-cud/releases/download/ms-dep-pkg-cud-10.0.0-build.59/ms-dep-pkg-cud-10.0.0-build.59.tgz
     version: 10.0.0-build.59
-generated: "2024-09-16T08:17:49.625759326Z"
+generated: "2024-09-16T19:51:58.263336881Z"
