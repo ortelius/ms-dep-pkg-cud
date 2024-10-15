@@ -19,7 +19,7 @@ cvss = "3.2"
 defusedxml = "0.7.1"
 packageurl-python = "0.15.6"
 idna = "3.10"
-starlette = "0.39.2"
+starlette = "0.40.0"
 
 
 [build-system]
