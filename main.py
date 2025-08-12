@@ -1133,8 +1133,8 @@ def login(dhurl, user, password, errors):
 
 
 def update_vulns():
-    global dhurl
-    global cookies
+    global dhurl # noqa: F824
+    global cookies # noqa: F824
 
     # dhurl = "http://localhost:8181"
     # errors = []
