@@ -1133,6 +1133,14 @@ def login(dhurl, user, password, errors):
 
 
 def update_vulns():
+    """
+    Thread to update vulnerabilities
+
+    Global:
+        dhurl (string): url to server
+        cookies (string): cookies from login
+    """
+
     global dhurl # noqa: F824
     global cookies # noqa: F824
 
