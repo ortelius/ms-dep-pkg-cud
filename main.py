@@ -1141,8 +1141,8 @@ def update_vulns():
         cookies (string): cookies from login
     """
 
-    global dhurl # noqa: F824
-    global cookies # noqa: F824
+    global dhurl  # noqa: F824
+    global cookies  # noqa: F824
 
     # dhurl = "http://localhost:8181"
     # errors = []
