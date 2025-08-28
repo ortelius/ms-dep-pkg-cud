@@ -1,30 +1,24 @@
-FROM cgr.dev/chainguard/python:latest-dev@sha256:d20e7c8584e05690e155917960c2b9fd0fdca657a36706722e595c4a03ce4e3f AS builder
+FROM public.ecr.aws/amazonlinux/amazonlinux:2023.8.20250818.0@sha256:ae7ee9bf8436e1750ca7effe5a3e6fc3546003775ba169b93cc7b9901bcf1aa1
 
-ENV PATH=$PATH:/home/nonroot/.local/bin
+EXPOSE 8080
 
 COPY . /app
 WORKDIR /app
-ENV PATH=/home/nonroot/.local/bin:$PATH
+ENV PATH=/root/.local/bin:$PATH
 
-# hadolint ignore=DL4006
-RUN wget -q -O - https://install.python-poetry.org | python -
-RUN poetry install --no-root;
+# hadolint ignore=DL3041,DL4006
+RUN dnf install -y python3.12 wget git; \
+    wget -q -O - https://install.python-poetry.org | python3.12 -; \
+    poetry env use python3.12; \
+    poetry install --no-root; \
+    dnf upgrade -y; \
+    dnf clean all;
 
-FROM cgr.dev/chainguard/python:latest@sha256:bb606a2afc594b820a217ee76e7f59651922316bc706ab57a96f6ef3a9356634
-USER nonroot
-ENV DB_HOST localhost
-ENV DB_NAME postgres
-ENV DB_USER postgres
-ENV DB_PASS postgres
-ENV DB_PORT 5432
-
-COPY --from=builder /app /app
-COPY --from=builder /home/nonroot /home/nonroot
-
-WORKDIR /app
-
-EXPOSE 8080
-ENV PATH=$PATH:/home/nonroot/.local/bin
+ENV DB_HOST=localhost
+ENV DB_NAME=postgres
+ENV DB_USER=postgres
+ENV DB_PASS=postgres
+ENV DB_PORT=5432
 
 HEALTHCHECK CMD curl --fail http://localhost:8080/health || exit 1
 
