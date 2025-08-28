@@ -750,7 +750,10 @@ def create_compver(dhurl, cookies, purl):
     if purl is None or purl.strip() == "":
         return
 
-    purl_parts = PackageURL.from_string(purl)
+    try:
+        purl_parts = PackageURL.from_string(purl)
+    except ValueError:
+        return
 
     domain = ""
     if purl_parts.namespace is None:
