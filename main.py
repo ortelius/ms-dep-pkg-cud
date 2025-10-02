@@ -21,8 +21,10 @@ import os
 import re
 import socket
 import subprocess  # nosec B404
+import sys
 import tempfile
 import threading
+import traceback
 import urllib.parse
 import warnings
 from pprint import pprint
@@ -33,6 +35,7 @@ import uvicorn
 from cvss import CVSS2, CVSS3, CVSS4
 from defusedxml import ElementTree as ET
 from fastapi import FastAPI, HTTPException, Request, Response, status
+from fastapi.responses import JSONResponse
 from packageurl import PackageURL
 from pydantic import BaseModel  # pylint: disable=E0611
 from sqlalchemy import create_engine
@@ -99,6 +102,40 @@ app = FastAPI(
     },
     openapi_tags=tags_metadata,
 )
+
+
+# Add global exception handler for 502 errors
+@app.exception_handler(Exception)
+async def custom_exception_handler(request: Request, exc: Exception):
+    """
+    Custom exception handler that prints stack trace for 502 errors
+    """
+    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+
+    # Check if it's a connection/gateway error that would result in 502
+    if isinstance(exc, (requests.exceptions.ConnectionError,
+                       requests.exceptions.Timeout,
+                       TimeoutError)):
+        status_code = status.HTTP_502_BAD_GATEWAY
+
+        # Print stack trace to stdout
+        print("\n" + "="*80, flush=True)
+        print("502 BAD GATEWAY ERROR OCCURRED", flush=True)
+        print("="*80, flush=True)
+        print(f"Request URL: {request.url}", flush=True)
+        print(f"Request Method: {request.method}", flush=True)
+        print(f"Exception Type: {type(exc).__name__}", flush=True)
+        print(f"Exception Message: {str(exc)}", flush=True)
+        print("\nFull Stack Trace:", flush=True)
+        print("-"*80, flush=True)
+        traceback.print_exc(file=sys.stdout)
+        sys.stdout.flush()
+        print("="*80 + "\n", flush=True)
+
+    return JSONResponse(
+        status_code=status_code,
+        content={"detail": str(exc)}
+    )
 
 
 # Init db connection
@@ -185,13 +222,30 @@ def get_json(url, cookies):
         res = requests.get(url, cookies=cookies, timeout=300)
         if res is None:
             return None
+        if res.status_code == 502:
+            print("\n" + "="*80, flush=True)
+            print(f"502 BAD GATEWAY response from: {url}", flush=True)
+            print("="*80, flush=True)
+            print("Stack trace:", flush=True)
+            traceback.print_stack(file=sys.stdout)
+            sys.stdout.flush()
+            print("="*80 + "\n", flush=True)
         if res.status_code != 200:
             return None
         return res.json()
     except requests.exceptions.ConnectionError as conn_error:
-        print(str(conn_error))
+        print("\n" + "="*80, flush=True)
+        print("502 CONNECTION ERROR in get_json", flush=True)
+        print(f"URL: {url}", flush=True)
+        print(f"Error: {str(conn_error)}", flush=True)
+        print("-"*80, flush=True)
+        traceback.print_exc(file=sys.stdout)
+        sys.stdout.flush()
+        print("="*80 + "\n", flush=True)
     except Exception as err:
-        print(f"Other error occurred: {err}")
+        print(f"Other error occurred: {err}", flush=True)
+        traceback.print_exc(file=sys.stdout)
+        sys.stdout.flush()
     return None
 
 
@@ -231,11 +285,27 @@ def post_json(url, payload, cookies):
         if res is None:
             return None
 
+        if res.status_code == 502:
+            print("\n" + "="*80, flush=True)
+            print(f"502 BAD GATEWAY response from POST: {url}", flush=True)
+            print("="*80, flush=True)
+            print("Stack trace:", flush=True)
+            traceback.print_stack(file=sys.stdout)
+            sys.stdout.flush()
+            print("="*80 + "\n", flush=True)
+
         if res.status_code < 200 and res.status_code > 299:
             return None
         return res.json()
     except requests.exceptions.ConnectionError as conn_error:
-        print(str(conn_error))
+        print("\n" + "="*80, flush=True)
+        print("502 CONNECTION ERROR in post_json", flush=True)
+        print(f"URL: {url}", flush=True)
+        print(f"Error: {str(conn_error)}", flush=True)
+        print("-"*80, flush=True)
+        traceback.print_exc(file=sys.stdout)
+        sys.stdout.flush()
+        print("="*80 + "\n", flush=True)
     return None
 
 
@@ -939,14 +1009,31 @@ def get_deb_info(package_name, version):
     repo_url = None
     dscfile = f"https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/{package_name}/{version}/{package_name}_{version}.dsc"
 
-    response = requests.get(dscfile, allow_redirects=True, timeout=2)
-    # Check if the request was successful (status code 200)
-    if response.status_code == 200:
-        dsc_content = response.text
+    try:
+        response = requests.get(dscfile, allow_redirects=True, timeout=2)
+        # Check if the request was successful (status code 200)
+        if response.status_code == 502:
+            print("\n" + "="*80, flush=True)
+            print(f"502 BAD GATEWAY from get_deb_info: {dscfile}", flush=True)
+            print("="*80, flush=True)
+            traceback.print_stack(file=sys.stdout)
+            sys.stdout.flush()
+            print("="*80 + "\n", flush=True)
 
-        # Find the value for vcs-git using regular expression
-        vcs_git_match = re.search(r"^Vcs-Git:\s*(.*)", dsc_content, re.MULTILINE)
-        repo_url = vcs_git_match.group(1) if vcs_git_match else None
+        if response.status_code == 200:
+            dsc_content = response.text
+
+            # Find the value for vcs-git using regular expression
+            vcs_git_match = re.search(r"^Vcs-Git:\s*(.*)", dsc_content, re.MULTILINE)
+            repo_url = vcs_git_match.group(1) if vcs_git_match else None
+    except requests.exceptions.ConnectionError as conn_error:
+        print("\n" + "="*80, flush=True)
+        print("502 CONNECTION ERROR in get_deb_info", flush=True)
+        print(f"URL: {dscfile}", flush=True)
+        print(f"Error: {str(conn_error)}", flush=True)
+        traceback.print_exc(file=sys.stdout)
+        sys.stdout.flush()
+        print("="*80 + "\n", flush=True)
 
     if repo_url is None:
         return "", None
@@ -979,31 +1066,67 @@ def get_deb_info(package_name, version):
 
 def get_pypi_info(package_name, version):
     url = f"https://pypi.org/pypi/{package_name}/{version}/json"
-    response = requests.get(url, timeout=2)
-    data = response.json()
-    info = data.get("info", {})
-    project_urls = info.get("project_urls", {})
+    try:
+        response = requests.get(url, timeout=2)
+        if response.status_code == 502:
+            print("\n" + "="*80, flush=True)
+            print(f"502 BAD GATEWAY from get_pypi_info: {url}", flush=True)
+            print("="*80, flush=True)
+            traceback.print_stack(file=sys.stdout)
+            sys.stdout.flush()
+            print("="*80 + "\n", flush=True)
 
-    repo_url = None
-    for key, value in project_urls.items():
-        if "source" in key.lower():
-            repo_url = value
-            break
-    commit_sha = get_commit_sha(repo_url, version)
-    return repo_url, commit_sha
+        data = response.json()
+        info = data.get("info", {})
+        project_urls = info.get("project_urls", {})
+
+        repo_url = None
+        for key, value in project_urls.items():
+            if "source" in key.lower():
+                repo_url = value
+                break
+        commit_sha = get_commit_sha(repo_url, version)
+        return repo_url, commit_sha
+    except requests.exceptions.ConnectionError as conn_error:
+        print("\n" + "="*80, flush=True)
+        print("502 CONNECTION ERROR in get_pypi_info", flush=True)
+        print(f"URL: {url}", flush=True)
+        print(f"Error: {str(conn_error)}", flush=True)
+        traceback.print_exc(file=sys.stdout)
+        sys.stdout.flush()
+        print("="*80 + "\n", flush=True)
+        return None, None
 
 
 def get_npm_info(package_name, version):
     url = f"https://registry.npmjs.org/{package_name}/{version}"
-    response = requests.get(url, timeout=2)
-    if response.status_code == 200:
-        data = response.json()
-        repo_url = data.get("repository", {}).get("url", "")
-    else:
-        return "", None
+    try:
+        response = requests.get(url, timeout=2)
+        if response.status_code == 502:
+            print("\n" + "="*80, flush=True)
+            print(f"502 BAD GATEWAY from get_npm_info: {url}", flush=True)
+            print("="*80, flush=True)
+            traceback.print_stack(file=sys.stdout)
+            sys.stdout.flush()
+            print("="*80 + "\n", flush=True)
 
-    commit_sha = get_commit_sha(repo_url, version)
-    return repo_url, commit_sha
+        if response.status_code == 200:
+            data = response.json()
+            repo_url = data.get("repository", {}).get("url", "")
+        else:
+            return "", None
+
+        commit_sha = get_commit_sha(repo_url, version)
+        return repo_url, commit_sha
+    except requests.exceptions.ConnectionError as conn_error:
+        print("\n" + "="*80, flush=True)
+        print("502 CONNECTION ERROR in get_npm_info", flush=True)
+        print(f"URL: {url}", flush=True)
+        print(f"Error: {str(conn_error)}", flush=True)
+        traceback.print_exc(file=sys.stdout)
+        sys.stdout.flush()
+        print("="*80 + "\n", flush=True)
+        return "", None
 
 
 def get_golang_info(domain, module_name, version):
@@ -1012,13 +1135,30 @@ def get_golang_info(domain, module_name, version):
 
     url = f"https://proxy.golang.org/{domain}/{module_name}/@v/{version}.info"
     print("Version URL: " + url)
-    response = requests.get(url, timeout=2)
-    if response.status_code == 200:
-        data = response.json()
-        origin = data.get("Origin", None)
-        if origin is not None:
-            repo_url = origin.get("URL", None)
-            commit_sha = origin.get("Hash", None)
+    try:
+        response = requests.get(url, timeout=2)
+        if response.status_code == 502:
+            print("\n" + "="*80, flush=True)
+            print(f"502 BAD GATEWAY from get_golang_info: {url}", flush=True)
+            print("="*80, flush=True)
+            traceback.print_stack(file=sys.stdout)
+            sys.stdout.flush()
+            print("="*80 + "\n", flush=True)
+
+        if response.status_code == 200:
+            data = response.json()
+            origin = data.get("Origin", None)
+            if origin is not None:
+                repo_url = origin.get("URL", None)
+                commit_sha = origin.get("Hash", None)
+    except requests.exceptions.ConnectionError as conn_error:
+        print("\n" + "="*80, flush=True)
+        print("502 CONNECTION ERROR in get_golang_info", flush=True)
+        print(f"URL: {url}", flush=True)
+        print(f"Error: {str(conn_error)}", flush=True)
+        traceback.print_exc(file=sys.stdout)
+        sys.stdout.flush()
+        print("="*80 + "\n", flush=True)
 
     return repo_url, commit_sha
 
@@ -1026,35 +1166,71 @@ def get_golang_info(domain, module_name, version):
 def get_java_info(group, artifact, version):
     url = url = f'https://repo1.maven.org/maven2/{group.replace(".", "/")}/{artifact}/{version}/{artifact}-{version}.pom'
 
-    response = requests.get(url, timeout=2)
-    if response.status_code != 200:
+    try:
+        response = requests.get(url, timeout=2)
+        if response.status_code == 502:
+            print("\n" + "="*80, flush=True)
+            print(f"502 BAD GATEWAY from get_java_info: {url}", flush=True)
+            print("="*80, flush=True)
+            traceback.print_stack(file=sys.stdout)
+            sys.stdout.flush()
+            print("="*80 + "\n", flush=True)
+
+        if response.status_code != 200:
+            return "", None
+
+        # Parse the POM file
+        pom_tree = ET.fromstring(response.text)
+
+        repo_url = None
+        # Extract SCM information
+        scm_element = pom_tree.find(".//{http://maven.apache.org/POM/4.0.0}scm")
+        if scm_element is not None:
+            url_elem = scm_element.find(".//{http://maven.apache.org/POM/4.0.0}url")
+            if url_elem is not None:
+                repo_url = url_elem.text
+
+        if repo_url is None:
+            return None, None
+
+        commit_sha = get_commit_sha(repo_url, version)
+        return repo_url, commit_sha
+    except requests.exceptions.ConnectionError as conn_error:
+        print("\n" + "="*80, flush=True)
+        print("502 CONNECTION ERROR in get_java_info", flush=True)
+        print(f"URL: {url}", flush=True)
+        print(f"Error: {str(conn_error)}", flush=True)
+        traceback.print_exc(file=sys.stdout)
+        sys.stdout.flush()
+        print("="*80 + "\n", flush=True)
         return "", None
-
-    # Parse the POM file
-    pom_tree = ET.fromstring(response.text)
-
-    repo_url = None
-    # Extract SCM information
-    scm_element = pom_tree.find(".//{http://maven.apache.org/POM/4.0.0}scm")
-    if scm_element is not None:
-        url = scm_element.find(".//{http://maven.apache.org/POM/4.0.0}url")
-        if url is not None:
-            repo_url = url.text
-
-    if repo_url is None:
-        return None, None
-
-    commit_sha = get_commit_sha(repo_url, version)
-    return repo_url, commit_sha
 
 
 def get_rust_info(crate_name, version):
     url = f"https://crates.io/api/v1/crates/{crate_name}/{version}"
-    response = requests.get(url, timeout=2)
-    data = response.json()
-    repo_url = data.get("crate", {}).get("repository", "")
-    commit_sha = get_commit_sha(repo_url, version)
-    return repo_url, commit_sha
+    try:
+        response = requests.get(url, timeout=2)
+        if response.status_code == 502:
+            print("\n" + "="*80, flush=True)
+            print(f"502 BAD GATEWAY from get_rust_info: {url}", flush=True)
+            print("="*80, flush=True)
+            traceback.print_stack(file=sys.stdout)
+            sys.stdout.flush()
+            print("="*80 + "\n", flush=True)
+
+        data = response.json()
+        repo_url = data.get("crate", {}).get("repository", "")
+        commit_sha = get_commit_sha(repo_url, version)
+        return repo_url, commit_sha
+    except requests.exceptions.ConnectionError as conn_error:
+        print("\n" + "="*80, flush=True)
+        print("502 CONNECTION ERROR in get_rust_info", flush=True)
+        print(f"URL: {url}", flush=True)
+        print(f"Error: {str(conn_error)}", flush=True)
+        traceback.print_exc(file=sys.stdout)
+        sys.stdout.flush()
+        print("="*80 + "\n", flush=True)
+        return None, None
 
 
 def getCommitFromPurl(package_type, package_namespace, package_name, package_version, purl):
@@ -1111,10 +1287,26 @@ def get_vulns(payload):
     url = "https://api.osv.dev/v1/query"
     try:
         response = requests.post(url, json=payload, headers={"Content-Type": "application/json"}, timeout=10)
+        if response.status_code == 502:
+            print("\n" + "="*80, flush=True)
+            print(f"502 BAD GATEWAY from get_vulns: {url}", flush=True)
+            print("="*80, flush=True)
+            traceback.print_stack(file=sys.stdout)
+            sys.stdout.flush()
+            print("="*80 + "\n", flush=True)
+
         if response.status_code == 200:
             data = response.json()
             if "vulns" in data:
                 vulns = data["vulns"]
+    except requests.exceptions.ConnectionError as conn_error:
+        print("\n" + "="*80, flush=True)
+        print("502 CONNECTION ERROR in get_vulns", flush=True)
+        print(f"URL: {url}", flush=True)
+        print(f"Error: {str(conn_error)}", flush=True)
+        traceback.print_exc(file=sys.stdout)
+        sys.stdout.flush()
+        print("="*80 + "\n", flush=True)
     except Exception as ex:
         print(ex)
 
@@ -1140,6 +1332,14 @@ def login(dhurl, user, password, errors):
             data={"user": user, "pass": password},
             timeout=300,
         )
+        if result.status_code == 502:
+            print("\n" + "="*80, flush=True)
+            print(f"502 BAD GATEWAY from login: {dhurl}/dmadminweb/API/login", flush=True)
+            print("="*80, flush=True)
+            traceback.print_stack(file=sys.stdout)
+            sys.stdout.flush()
+            print("="*80 + "\n", flush=True)
+
         cookies = result.cookies
         if result.status_code == 200:
             data = result.json()
@@ -1148,6 +1348,13 @@ def login(dhurl, user, password, errors):
                 return None
             return cookies
     except requests.exceptions.ConnectionError as conn_error:
+        print("\n" + "="*80, flush=True)
+        print("502 CONNECTION ERROR in login", flush=True)
+        print(f"URL: {dhurl}/dmadminweb/API/login", flush=True)
+        print(f"Error: {str(conn_error)}", flush=True)
+        traceback.print_exc(file=sys.stdout)
+        sys.stdout.flush()
+        print("="*80 + "\n", flush=True)
         errors.append(str(conn_error))
     return None
 
@@ -1480,22 +1687,47 @@ async def safety(request: Request, response: Response, compid: int):
     This is the end point used to upload a Python Safety SBOM
     """
     global safety_db  # pylint: disable=W0603
-    result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies, timeout=5)
-    if result is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed")
 
-    if result.status_code != status.HTTP_200_OK:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authorization Failed status_code=" + str(result.status_code),
-        )
+    try:
+        result = requests.get(validateuser_url + "/msapi/validateuser", cookies=request.cookies, timeout=5)
+        if result is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization Failed")
+
+        if result.status_code != status.HTTP_200_OK:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Authorization Failed status_code=" + str(result.status_code),
+            )
+    except requests.exceptions.ConnectionError as conn_error:
+        print("\n" + "="*80, flush=True)
+        print("502 CONNECTION ERROR in safety endpoint", flush=True)
+        print(f"Error: {str(conn_error)}", flush=True)
+        traceback.print_exc(file=sys.stdout)
+        sys.stdout.flush()
+        print("="*80 + "\n", flush=True)
+        raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail="Connection error")
 
     if safety_db is None:
-        url = requests.get(
-            "https://raw.githubusercontent.com/pyupio/safety-db/master/data/insecure_full.json",
-            timeout=5,
-        )
-        safety_db = json.loads(url.text)
+        try:
+            url = requests.get(
+                "https://raw.githubusercontent.com/pyupio/safety-db/master/data/insecure_full.json",
+                timeout=5,
+            )
+            if url.status_code == 502:
+                print("\n" + "="*80, flush=True)
+                print("502 BAD GATEWAY when fetching safety database", flush=True)
+                print("="*80, flush=True)
+                traceback.print_stack(file=sys.stdout)
+                sys.stdout.flush()
+                print("="*80 + "\n", flush=True)
+            safety_db = json.loads(url.text)
+        except requests.exceptions.ConnectionError as conn_error:
+            print("\n" + "="*80, flush=True)
+            print("502 CONNECTION ERROR fetching safety database", flush=True)
+            print(f"Error: {str(conn_error)}", flush=True)
+            traceback.print_exc(file=sys.stdout)
+            sys.stdout.flush()
+            print("="*80 + "\n", flush=True)
 
     safety_json = await request.json()
     components_data = []
