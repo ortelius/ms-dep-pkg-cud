@@ -1,4 +1,4 @@
-FROM public.ecr.aws/amazonlinux/amazonlinux:2023.8.20250915.0@sha256:097c3f2de85902a408c41b85c837bc112483dd90400d471a9a8519c721d3c886
+FROM public.ecr.aws/amazonlinux/amazonlinux:2023.9.20251014.0@sha256:78804160fd6e168e29aab05b9482b566addb6879c37c75053172cb6e911232ea
 
 EXPOSE 8080
 
