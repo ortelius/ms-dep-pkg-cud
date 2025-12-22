@@ -32,22 +32,22 @@ RestAPI endpoint for adding SBOM data to a component
 
 ## Path Table
 
-| Method | Path | Description |
-| --- | --- | --- |
-| GET | [/health](#gethealth) | Health |
-| GET | [/msapi/deppkg](#getmsapideppkg) | Sbom Type |
-| POST | [/msapi/deppkg/cyclonedx](#postmsapideppkgcyclonedx) | Cyclonedx |
-| POST | [/msapi/deppkg/spdx](#postmsapideppkgspdx) | Spdx |
-| POST | [/msapi/deppkg/safety](#postmsapideppkgsafety) | Safety |
-| POST | [/msapi/purl2comp](#postmsapipurl2comp) | Purl2Comp |
+| Method | Path                                                 | Description |
+|--------|------------------------------------------------------|-------------|
+| GET    | [/health](#gethealth)                                | Health      |
+| GET    | [/msapi/deppkg](#getmsapideppkg)                     | Sbom Type   |
+| POST   | [/msapi/deppkg/cyclonedx](#postmsapideppkgcyclonedx) | Cyclonedx   |
+| POST   | [/msapi/deppkg/spdx](#postmsapideppkgspdx)           | Spdx        |
+| POST   | [/msapi/deppkg/safety](#postmsapideppkgsafety)       | Safety      |
+| POST   | [/msapi/purl2comp](#postmsapipurl2comp)              | Purl2Comp   |
 
 ## Reference Table
 
-| Name | Path | Description |
-| --- | --- | --- |
-| HTTPValidationError | [#/components/schemas/HTTPValidationError](#componentsschemashttpvalidationerror) |  |
-| StatusMsg | [#/components/schemas/StatusMsg](#componentsschemasstatusmsg) |  |
-| ValidationError | [#/components/schemas/ValidationError](#componentsschemasvalidationerror) |  |
+| Name                | Path                                                                              | Description |
+|---------------------|-----------------------------------------------------------------------------------|-------------|
+| HTTPValidationError | [#/components/schemas/HTTPValidationError](#componentsschemashttpvalidationerror) |             |
+| StatusMsg           | [#/components/schemas/StatusMsg](#componentsschemasstatusmsg)                     |             |
+| ValidationError     | [#/components/schemas/ValidationError](#componentsschemasvalidationerror)         |             |
 
 ## Path Details
 
