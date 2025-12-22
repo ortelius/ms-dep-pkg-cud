@@ -58,6 +58,9 @@ RestAPI endpoint for adding SBOM data to a component
 - Summary  
 Health
 
+- Operation id  
+health_health_get
+
 - Description  
 This health check end point used by Kubernetes
 
@@ -67,7 +70,7 @@ This health check end point used by Kubernetes
 
 `application/json`
 
-```ts
+```typescript
 {
   status?: string
   service_name?: string
@@ -81,6 +84,9 @@ This health check end point used by Kubernetes
 - Summary  
 Sbom Type
 
+- Operation id  
+sbom_type_msapi_deppkg_get
+
 - Description  
 This is the end point used determine the type of SBOM format this microservice can handle
 
@@ -90,7 +96,7 @@ This is the end point used determine the type of SBOM format this microservice c
 
 `application/json`
 
-```ts
+```typescript
 {}
 ```
 
@@ -101,12 +107,15 @@ This is the end point used determine the type of SBOM format this microservice c
 - Summary  
 Cyclonedx
 
+- Operation id  
+cyclonedx_msapi_deppkg_cyclonedx_post
+
 - Description  
 This is the end point used to upload a CycloneDX SBOM
 
 #### Parameters(Query)
 
-```ts
+```typescript
 compid: integer
 ```
 
@@ -116,7 +125,7 @@ compid: integer
 
 `application/json`
 
-```ts
+```typescript
 {}
 ```
 
@@ -124,7 +133,7 @@ compid: integer
 
 `application/json`
 
-```ts
+```typescript
 {
   detail: {
     loc?: Partial(string) & Partial(integer)[]
@@ -141,12 +150,15 @@ compid: integer
 - Summary  
 Spdx
 
+- Operation id  
+spdx_msapi_deppkg_spdx_post
+
 - Description  
 This is the end point used to upload a SPDX SBOM
 
 #### Parameters(Query)
 
-```ts
+```typescript
 compid: integer
 ```
 
@@ -156,7 +168,7 @@ compid: integer
 
 `application/json`
 
-```ts
+```typescript
 {}
 ```
 
@@ -164,7 +176,7 @@ compid: integer
 
 `application/json`
 
-```ts
+```typescript
 {
   detail: {
     loc?: Partial(string) & Partial(integer)[]
@@ -181,12 +193,15 @@ compid: integer
 - Summary  
 Safety
 
+- Operation id  
+safety_msapi_deppkg_safety_post
+
 - Description  
 This is the end point used to upload a Python Safety SBOM
 
 #### Parameters(Query)
 
-```ts
+```typescript
 compid: integer
 ```
 
@@ -196,7 +211,7 @@ compid: integer
 
 `application/json`
 
-```ts
+```typescript
 {}
 ```
 
@@ -204,7 +219,7 @@ compid: integer
 
 `application/json`
 
-```ts
+```typescript
 {
   detail: {
     loc?: Partial(string) & Partial(integer)[]
@@ -221,6 +236,9 @@ compid: integer
 - Summary  
 Purl2Comp
 
+- Operation id  
+purl2comp_msapi_purl2comp_post
+
 - Description  
 This is the end point used to create a component from a purl
 
@@ -230,7 +248,7 @@ This is the end point used to create a component from a purl
 
 `application/json`
 
-```ts
+```typescript
 {}
 ```
 
@@ -238,7 +256,7 @@ This is the end point used to create a component from a purl
 
 ### #/components/schemas/HTTPValidationError
 
-```ts
+```typescript
 {
   detail: {
     loc?: Partial(string) & Partial(integer)[]
@@ -250,7 +268,7 @@ This is the end point used to create a component from a purl
 
 ### #/components/schemas/StatusMsg
 
-```ts
+```typescript
 {
   status?: string
   service_name?: string
@@ -259,7 +277,7 @@ This is the end point used to create a component from a purl
 
 ### #/components/schemas/ValidationError
 
-```ts
+```typescript
 {
   loc?: Partial(string) & Partial(integer)[]
   msg: string
