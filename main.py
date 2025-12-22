@@ -851,8 +851,9 @@ def create_compver(dhurl, cookies, purl):
             )
 
             count_result = 0
-            if cursor.fetchone() is not None:
-                count_result = cursor.fetchone()[0]
+            row = cursor.fetchone()
+            if row is not None:
+                count_result = row[0]
             cursor.close
 
             if count_result == 0:
