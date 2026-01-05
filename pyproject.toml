@@ -8,7 +8,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-certifi = "^2025.11.12"
+certifi = "^2026.0.0"
 cvss = "^3.6"
 defusedxml = "^0.7.1"
 fastapi = "^0.128.0"
